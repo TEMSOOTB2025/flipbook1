@@ -15,18 +15,33 @@
       background: #89CFF0;
       font-family: sans-serif;
     }
-     
+
+    #main-layout {
+      display: flex;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    #logo {
+      margin-right: 20px;
+    }
+
+    .top-left-image {
+      width: 100px;
+      height: auto;
+      object-fit: contain;
+    }
+
     #flipbook-container {
       width: 760px;
-      margin: 60px auto 0;
       position: relative;
       z-index: 10;
+      margin: 0;
     }
 
     #flipbook {
       width: 760px;
       height: 500px;
-      margin: 0 auto;
       position: relative;
       z-index: 10;
       display: none;
@@ -41,13 +56,6 @@
       margin-top: 100px;
     }
 
-      #logo {
-      font-family: Arial;
-      color: blue;
-      margin-top: 15px;
-      margin-left: 15px;
-    }
-
     .page {
       width: 380px;
       height: 500px;
@@ -58,15 +66,6 @@
       z-index: 1;
       touch-action: manipulation;
       pointer-events: auto;
-    }
-    
-  .top-left-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 20px; /* Adjust size as needed */
-      height: 20px;
-      object-fit: contain
     }
 
     canvas, img {
@@ -137,25 +136,28 @@
   </style>
 </head>
 <body>
-  <!--div id="logo">
-    <img src="TEMSLogo.png" alt="Top Left Image" class="top-left-image" width="20" height="20" style="vertical-align:middle;margin:15px 15px"> >
-</div-->
+
+  <div id="main-layout">
+    <div id="logo">
+      <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
+    </div>
+
+    <div id="flipbook-container">
+      <div id="flipbook"></div>
+
+      <button id="prev-btn" class="nav-button">
+        <img src="previous-arrow.png" alt="Previous">
+      </button>
+
+      <button id="next-btn" class="nav-button">
+        <img src="next-arrow.png" alt="Next">
+      </button>
+    </div>
+  </div>
 
   <div id="loader">
     <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
     <p>Loading flipbook, please wait...</p>
-  </div>
-
-  <div id="flipbook-container">
-    <div id="flipbook"></div>
-
-    <button id="prev-btn" class="nav-button">
-      <img src="previous-arrow.png" alt="Previous">
-    </button>
-
-    <button id="next-btn" class="nav-button">
-      <img src="next-arrow.png" alt="Next">
-    </button>
   </div>
 
   <div id="page-scrollbar-container">
@@ -172,7 +174,7 @@
   <script>
     document.getElementById("loader").style.display = "block";
 
-    const totalPages = 158; // change this to match actual page count
+    const totalPages = 158;
     const flipbook = $('#flipbook');
     const scrollbar = document.getElementById("page-scrollbar");
     const scrollbarContainer = document.getElementById("page-scrollbar-container");
