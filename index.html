@@ -83,6 +83,11 @@
       bottom: 0;
     }
 
+    #download-btn {
+      right: -120px;
+      bottom: 0;
+    }
+
     .nav-button img {
       height: 40px;
       width: auto;
@@ -136,6 +141,10 @@
     <button id="next-btn" class="nav-button">
       <img src="next-arrow.png" alt="Next">
     </button>
+
+    <a id="download-btn" class="nav-button" href="OOTB2025.pdf" download>
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download">
+    </a>
   </div>
 
   <div id="page-scrollbar-container">
@@ -158,6 +167,7 @@
     const scrollbarContainer = document.getElementById("page-scrollbar-container");
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
+    const downloadBtn = document.getElementById("download-btn");
     const tooltip = document.getElementById("tooltip");
     const turnAudio = document.getElementById("page-turn-audio");
     turnAudio.volume = 0.4;
@@ -203,6 +213,7 @@
       document.getElementById("flipbook").style.display = "block";
       prevBtn.style.display = "block";
       nextBtn.style.display = "block";
+      downloadBtn.style.display = "block";
       scrollbarContainer.style.display = "block";
       scrollbarContainer.style.visibility = "visible";
 
