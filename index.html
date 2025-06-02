@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OOTB 2025 - Timothy Edwards Middle School</title>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Turn.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #89CFF0;
+      font-family: sans-serif;
+    }
+
+    #flipbook-container {
+      width: 760px;
+      margin: 60px auto 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    #flipbook {
+      width: 760px;
+      height: 500px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+      display: none;
+      touch-action: manipulation;
+      pointer-events: auto;
+    }
+
+    #loader {
+      font-family: Arial;
+      color: white;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .page {
+      width: 380px;
+      height: 500px;
+      background: white;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 1;
+      touch-action: manipulation;
+      pointer-events: auto;
+    }
+
+    canvas, img {
+      width: 100%;
+      height: 100%;
+      image-rendering: crisp-edges;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimizeSpeed;
+      -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    .nav-button {
+      position: absolute;
+      background: gray;
+      border: none;
+      cursor: pointer;
+      z-index: 1000;
+      border-radius: 8px;
+      padding: 5px;
+      display: none;
+    }
+
+    #prev-btn {
+      left: -60px;
+      bottom: 0;
+    }
+
+    #next-btn {
+      right: -60px;
+      bottom: 0;
+    }
+
+    .nav-button img {
+      height: 40px;
+      width: auto;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+
+    .nav-button img:hover {
+      opacity: 1;
+    }
+
+    #page-scrollbar-container {
+      width: 760px;
+      margin: 10px auto 0;
+      text-align: center;
+      position: relative;
+      display: none;
+      visibility: hidden;
+    }
+
+    #page-scrollbar {
+      width: 100%;
+    }
+
+    #tooltip {
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      pointer-events: none;
+      z-index: 1001;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
+    <p>Loading flipbook, please wait...</p>
+  </div>
+
+  <div id="flipbook-container">
+    <div id="flipbook"></div>
+
+    <button id="prev-btn" class="nav-button">
+      <img src="previous-arrow.png" alt="Previous">
+    </button>
+
+    <button id="next-btn" class="nav-button">
+      <img src="next-arrow.png" alt="Next">
+    </button>
+  </div>
+
+  <div id="page-scrollbar-container">
+    <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+  </div>
+
+  <div id="tooltip"></div>
+
+  <audio id="page-turn-audio" preload="auto">
+    <source src="turn.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    document.getElementById("loader").style.display = "block";
+
+    const totalPages = 158; // change this to match actual page count
+    const flipbook = $('#flipbook');
+    const scrollbar = document.getElementById("page-scrollbar");
+    const scrollbarContainer = document.getElementById("page-scrollbar-container");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const tooltip = document.getElementById("tooltip");
+    const turnAudio = document.getElementById("page-turn-audio");
+    turnAudio.volume = 0.4;
+
+    scrollbar.max = totalPages;
+
+    async function loadImagePages() {
+      for (let i = 1; i <= totalPages; i++) {
+        const img = document.createElement('img');
+        img.src = `pages/Page_${i}.png`;
+        img.alt = `Page ${i}`;
+
+        const pageDiv = $('<div class="page">').append(img);
+        pageDiv.attr('data-page-number', i);
+        flipbook.append(pageDiv);
+      }
+
+      if (totalPages % 2 !== 0) {
+        flipbook.append($('<div class="page">'));
+      }
+
+      flipbook.turn({
+        width: 760,
+        height: 500,
+        autoCenter: true,
+        display: 'double',
+        acceleration: true,
+        gradients: true,
+        elevation: 300,
+        duration: 1500,
+        when: {
+          turning: function(event, page, view) {
+            turnAudio.currentTime = 0;
+            turnAudio.play().catch(() => {});
+          },
+          turned: function(event, page) {
+            scrollbar.value = page;
+          }
+        }
+      });
+
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("flipbook").style.display = "block";
+      prevBtn.style.display = "block";
+      nextBtn.style.display = "block";
+      scrollbarContainer.style.display = "block";
+      scrollbarContainer.style.visibility = "visible";
+
+      prevBtn.addEventListener('click', () => {
+        $("#flipbook").turn("previous");
+      });
+
+      nextBtn.addEventListener('click', () => {
+        $("#flipbook").turn("next");
+      });
+    }
+
+    loadImagePages();
+
+    scrollbar.addEventListener('input', function (e) {
+      const page = parseInt(e.target.value);
+      $("#flipbook").turn("page", page);
+    });
+
+    scrollbar.addEventListener('mousemove', function (e) {
+      const rect = scrollbar.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      const estimatedPage = Math.round(percent * (scrollbar.max - 1)) + 1;
+      const maxPage = parseInt(scrollbar.max);
+      let label = '';
+
+      if (estimatedPage === 1) {
+        label = 'Front Cover';
+      } else if (estimatedPage === 2 || estimatedPage === 3) {
+        label = 'Introduction';
+      } else if (estimatedPage === maxPage) {
+        label = 'Back Cover';
+      } else {
+        const logicalPage = estimatedPage - 3;
+        const left = logicalPage % 2 === 0 ? logicalPage - 1 : logicalPage;
+        const right = left + 1;
+        label = `Pages ${left}–${right}`;
+      }
+
+      tooltip.style.left = (e.pageX - 20) + "px";
+      tooltip.style.top = (e.pageY - 40) + "px";
+      tooltip.style.display = "block";
+      tooltip.innerText = label;
+    });
+
+    scrollbar.addEventListener('mouseleave', function () {
+      tooltip.style.display = "none";
+    });
+  </script>
+</body>
+</html>
