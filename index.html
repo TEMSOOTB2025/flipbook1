@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OOTB 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -30,6 +30,12 @@
       width: 100px;
       height: auto;
       object-fit: contain;
+    }
+
+    #flipbook-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
     }
 
     #flipbook-container {
@@ -142,16 +148,18 @@
       <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
     </div>
 
-    <div id="flipbook-container">
-      <div id="flipbook"></div>
+    <div id="flipbook-wrapper">
+      <div id="flipbook-container">
+        <div id="flipbook"></div>
 
-      <button id="prev-btn" class="nav-button">
-        <img src="previous-arrow.png" alt="Previous">
-      </button>
+        <button id="prev-btn" class="nav-button">
+          <img src="previous-arrow.png" alt="Previous">
+        </button>
 
-      <button id="next-btn" class="nav-button">
-        <img src="next-arrow.png" alt="Next">
-      </button>
+        <button id="next-btn" class="nav-button">
+          <img src="next-arrow.png" alt="Next">
+        </button>
+      </div>
     </div>
   </div>
 
