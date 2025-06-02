@@ -220,6 +220,7 @@
         gradients: true,
         elevation: 300,
         duration: 1500,
+        turnCorners: 'bl,br', // ✅ Added for mouse/touch drag flipping support on all OS
         when: {
           turning: function(event, page, view) {
             turnAudio.currentTime = 0;
