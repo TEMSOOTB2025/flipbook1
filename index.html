@@ -10,7 +10,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
 
   <style>
-    /* ... Your existing CSS remains unchanged ... */
     body {
       margin: 0;
       background: #89CFF0;
@@ -35,6 +34,13 @@
       pointer-events: auto;
     }
 
+    #loader {
+      font-family: Arial;
+      color: white;
+      text-align: center;
+      margin-top: 100px;
+    }
+
     .page {
       width: 380px;
       height: 500px;
@@ -51,9 +57,11 @@
       width: 100%;
       height: 100%;
       image-rendering: crisp-edges;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimizeSpeed;
+      -ms-interpolation-mode: nearest-neighbor;
     }
 
-    /* Navigation buttons */
     .nav-button {
       position: absolute;
       background: gray;
@@ -75,11 +83,6 @@
       bottom: 0;
     }
 
-    #download-btn {
-      right: -120px;
-      bottom: 0;
-    }
-
     .nav-button img {
       height: 40px;
       width: auto;
@@ -89,34 +92,6 @@
 
     .nav-button img:hover {
       opacity: 1;
-    }
-
-    #download-btn::after {
-      content: "Download";
-      position: absolute;
-      bottom: 100%;
-      right: 0;
-      margin-bottom: 6px;
-      background: #333;
-      color: white;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      z-index: 1001;
-    }
-
-    #download-btn:hover::after {
-      opacity: 1;
-    }
-
-    #loader {
-      font-family: Arial;
-      color: white;
-      text-align: center;
-      margin-top: 100px;
     }
 
     #page-scrollbar-container {
@@ -161,10 +136,6 @@
     <button id="next-btn" class="nav-button">
       <img src="next-arrow.png" alt="Next">
     </button>
-
-    <a id="download-btn" class="nav-button" href="OOTB2025.pdf" download>
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download">
-    </a>
   </div>
 
   <div id="page-scrollbar-container">
@@ -175,10 +146,13 @@
 
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
 
   <script>
-    const totalPages = 158;
+    document.getElementById("loader").style.display = "block";
+
+    const totalPages = 158; // change this to match actual page count
     const flipbook = $('#flipbook');
     const scrollbar = document.getElementById("page-scrollbar");
     const scrollbarContainer = document.getElementById("page-scrollbar-container");
@@ -186,8 +160,8 @@
     const nextBtn = document.getElementById("next-btn");
     const tooltip = document.getElementById("tooltip");
     const turnAudio = document.getElementById("page-turn-audio");
-    const downloadBtn = document.getElementById("download-btn");
     turnAudio.volume = 0.4;
+
     scrollbar.max = totalPages;
 
     async function loadImagePages() {
@@ -195,6 +169,7 @@
         const img = document.createElement('img');
         img.src = `pages/Page_${i}.png`;
         img.alt = `Page ${i}`;
+
         const pageDiv = $('<div class="page">').append(img);
         pageDiv.attr('data-page-number', i);
         flipbook.append(pageDiv);
@@ -204,47 +179,43 @@
         flipbook.append($('<div class="page">'));
       }
 
-      // Wait for DOM to fully render
-      setTimeout(() => {
-        flipbook.turn({
-          width: 760,
-          height: 500,
-          autoCenter: true,
-          display: 'double',
-          acceleration: true,
-          gradients: true,
-          elevation: 300,
-          duration: 1500,
-          when: {
-            turning: function(event, page, view) {
-              turnAudio.currentTime = 0;
-              turnAudio.play().catch(() => {});
-            },
-            turned: function(event, page) {
-              scrollbar.value = page;
-            }
+      flipbook.turn({
+        width: 760,
+        height: 500,
+        autoCenter: true,
+        display: 'double',
+        acceleration: true,
+        gradients: true,
+        elevation: 300,
+        duration: 1500,
+        when: {
+          turning: function(event, page, view) {
+            turnAudio.currentTime = 0;
+            turnAudio.play().catch(() => {});
+          },
+          turned: function(event, page) {
+            scrollbar.value = page;
           }
-        });
+        }
+      });
 
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("flipbook").style.display = "block";
-        prevBtn.style.display = "block";
-        nextBtn.style.display = "block";
-        downloadBtn.style.display = "block";
-        scrollbarContainer.style.display = "block";
-        scrollbarContainer.style.visibility = "visible";
-      }, 100);
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("flipbook").style.display = "block";
+      prevBtn.style.display = "block";
+      nextBtn.style.display = "block";
+      scrollbarContainer.style.display = "block";
+      scrollbarContainer.style.visibility = "visible";
+
+      prevBtn.addEventListener('click', () => {
+        $("#flipbook").turn("previous");
+      });
+
+      nextBtn.addEventListener('click', () => {
+        $("#flipbook").turn("next");
+      });
     }
 
     loadImagePages();
-
-    prevBtn.addEventListener('click', () => {
-      $("#flipbook").turn("previous");
-    });
-
-    nextBtn.addEventListener('click', () => {
-      $("#flipbook").turn("next");
-    });
 
     scrollbar.addEventListener('input', function (e) {
       const page = parseInt(e.target.value);
@@ -279,21 +250,6 @@
 
     scrollbar.addEventListener('mouseleave', function () {
       tooltip.style.display = "none";
-    });
-
-    // Touch gestures fallback (for Windows precision touch, etc.)
-    let startX = 0;
-    flipbook.on('touchstart', function (e) {
-      startX = e.originalEvent.touches[0].clientX;
-    });
-
-    flipbook.on('touchend', function (e) {
-      const endX = e.originalEvent.changedTouches[0].clientX;
-      if (startX - endX > 50) {
-        flipbook.turn("next");
-      } else if (endX - startX > 50) {
-        flipbook.turn("previous");
-      }
     });
   </script>
 </body>
