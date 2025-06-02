@@ -164,7 +164,6 @@
       <img src="next-arrow.png" alt="Next">
     </button>
 
-    <!-- Download Button -->
     <a id="download-btn" class="nav-button" href="OOTB2025.pdf" download>
       <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download">
     </a>
@@ -220,7 +219,6 @@
         gradients: true,
         elevation: 300,
         duration: 1500,
-        turnCorners: 'bl,br', // ✅ Added for mouse/touch drag flipping support on all OS
         when: {
           turning: function(event, page, view) {
             turnAudio.currentTime = 0;
@@ -284,6 +282,31 @@
 
     scrollbar.addEventListener('mouseleave', function () {
       tooltip.style.display = "none";
+    });
+
+    // ✅ Mouse drag flipping support (for Windows desktop)
+    let isMouseDown = false;
+    let dragStartX = 0;
+
+    document.getElementById("flipbook").addEventListener("mousedown", function(e) {
+      isMouseDown = true;
+      dragStartX = e.pageX;
+    });
+
+    document.addEventListener("mouseup", function(e) {
+      if (!isMouseDown) return;
+      isMouseDown = false;
+
+      const dragEndX = e.pageX;
+      const diff = dragEndX - dragStartX;
+
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) {
+          $("#flipbook").turn("previous");
+        } else {
+          $("#flipbook").turn("next");
+        }
+      }
     });
   </script>
 </body>
