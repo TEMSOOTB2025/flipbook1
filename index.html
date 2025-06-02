@@ -15,7 +15,7 @@
       background: #89CFF0;
       font-family: sans-serif;
     }
-
+     
     #flipbook-container {
       width: 760px;
       margin: 60px auto 0;
@@ -52,6 +52,14 @@
       touch-action: manipulation;
       pointer-events: auto;
     }
+    
+  .top-left-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px; /* Adjust size as needed */
+      height: auto;
+    }
 
     canvas, img {
       width: 100%;
@@ -128,7 +136,7 @@
 
   <div id="flipbook-container">
     <div id="flipbook"></div>
-
+<img src="TEMSLogo.png" alt="Top Left Image" class="top-left-image">
     <button id="prev-btn" class="nav-button">
       <img src="previous-arrow.png" alt="Previous">
     </button>
