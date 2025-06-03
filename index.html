@@ -2,77 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue '25 - Timothy Edwards Middle School</title>
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <!-- Turn.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  </script>
 
   <style>
     body {
       margin: 0;
-      background: url('background.png') no-repeat center center fixed;
-      background-size: cover;
+      background: #89CFF0;
       font-family: sans-serif;
     }
 
-    #main-layout {
-      display: flex;
-      align-items: flex-start;
-      padding: 20px;
+    #logo-container {
+      position: absolute;
+      top: 60px;
+      left: 40px;
+      text-align: left;
+      z-index: 1002;
     }
 
-    #logo {
-      margin-right: 20px;
-      background: url('background.png') no-repeat center center;
-      background-size: cover;
-      padding: 10px;
-      text-align: center;
-      display: inline-block;
-    }
-
-    .top-left-image {
-      width: 130px;
+    #school-logo {
+      width: 90px;
       height: auto;
-      object-fit: contain;
       display: block;
-      margin: 0 auto;
     }
 
     #logo-caption {
-      font-size: 14px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
       color: #000;
-      margin-top: 5px;
       line-height: 1.4;
-      background: url('background.png') no-repeat center center;
-      background-size: cover;
-      padding: 8px;
-      border-radius: 6px;
+      margin-top: 6px;
     }
 
-    #flipbook-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    #logo-caption strong {
+      font-weight: bold;
+    }
+
+    #logo-caption .address {
+      font-size: 13px;
+      color: #333;
     }
 
     #flipbook-container {
-      width: 760px;
+      width: 880px;
+      margin: 60px auto 0;
       position: relative;
-      z-index: 10;
-      margin: 0;
     }
 
     #flipbook {
-      width: 760px;
-      height: 500px;
+      width: 880px;
+      height: 610px;
+      margin: 0 auto;
       position: relative;
-      z-index: 10;
       display: none;
-      touch-action: manipulation;
-      pointer-events: auto;
     }
 
     #loader {
@@ -83,24 +74,18 @@
     }
 
     .page {
-      width: 380px;
-      height: 500px;
-      background: white;
+      width: 440px;
+      height: 610px;
+      background: white url('background.png') center center no-repeat;
+      background-size: cover;
       overflow: hidden;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
       position: relative;
-      z-index: 1;
-      touch-action: manipulation;
-      pointer-events: auto;
     }
 
-    canvas, img {
+    canvas {
       width: 100%;
       height: 100%;
-      image-rendering: crisp-edges;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: optimizeSpeed;
-      -ms-interpolation-mode: nearest-neighbor;
     }
 
     .nav-button {
@@ -136,16 +121,16 @@
     }
 
     #page-scrollbar-container {
-      width: 760px;
+      width: 880px;
       margin: 10px auto 0;
       text-align: center;
       position: relative;
       display: none;
+      visibility: hidden;
     }
 
     #page-scrollbar {
       width: 100%;
-      transition: opacity 0.2s ease; /* Smooth fade */
     }
 
     #tooltip {
@@ -162,30 +147,16 @@
   </style>
 </head>
 <body>
-  <div id="main-layout">
-    <div id="logo">
-      <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
-      <div id="logo-caption">
-        <b>TIMOTHY EDWARDS</b><br>Middle School<br>
-        <i>100 Arnold Way</i><br>
-        <i>South Windsor, Connecticut</i>
-      </div>
-    </div>
-
-    <div id="flipbook-wrapper">
-      <div id="flipbook-container">
-        <div id="flipbook"></div>
-        <button id="prev-btn" class="nav-button">
-          <img src="previous-arrow.png" alt="Previous">
-        </button>
-        <button id="next-btn" class="nav-button">
-          <img src="next-arrow.png" alt="Next">
-        </button>
-      </div>
-
-      <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
-      </div>
+  <!-- LOGO -->
+  <div id="logo-container">
+    <img id="school-logo" src="TemsLogo.png" alt="TEMS Logo">
+    <div id="logo-caption">
+      <strong>TIMOTHY EDWARDS</strong><br>
+      Middle School<br><br>
+      <span class="address">
+        100 Arnold Way<br>
+        South Windsor, Connecticut
+      </span>
     </div>
   </div>
 
@@ -194,8 +165,25 @@
     <p>Loading flipbook, please wait...</p>
   </div>
 
+  <div id="flipbook-container">
+    <div id="flipbook"></div>
+
+    <button id="prev-btn" class="nav-button">
+      <img src="previous-arrow.png" alt="Previous">
+    </button>
+
+    <button id="next-btn" class="nav-button">
+      <img src="next-arrow.png" alt="Next">
+    </button>
+  </div>
+
+  <div id="page-scrollbar-container">
+    <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+  </div>
+
   <div id="tooltip"></div>
 
+  <!-- Audio element for page turn -->
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
@@ -204,74 +192,94 @@
   <script>
     document.getElementById("loader").style.display = "block";
 
-    const totalPages = 158;
-    const flipbook = $('#flipbook');
+    const url = 'OOTB2025.pdf';
+    const tooltip = document.getElementById("tooltip");
     const scrollbar = document.getElementById("page-scrollbar");
     const scrollbarContainer = document.getElementById("page-scrollbar-container");
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
-    const tooltip = document.getElementById("tooltip");
+
     const turnAudio = document.getElementById("page-turn-audio");
     turnAudio.volume = 0.4;
 
-    scrollbar.max = totalPages;
+    const loadingTask = pdfjsLib.getDocument(url);
+    loadingTask.promise.then(function(pdf) {
+      const flipbook = $('#flipbook');
+      const totalPages = pdf.numPages;
+      scrollbar.max = totalPages;
 
-    async function loadImagePages() {
-      for (let i = 1; i <= totalPages; i++) {
-        const img = document.createElement('img');
-        img.src = `pages/Page_${i}.png`;
-        img.alt = `Page ${i}`;
+      function renderPage(pageNumber) {
+        return pdf.getPage(pageNumber).then(page => {
+          const scale = 1.5;
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
 
-        const pageDiv = $('<div class="page">').append(img);
-        pageDiv.attr('data-page-number', i);
-        flipbook.append(pageDiv);
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+
+          return page.render(renderContext).promise.then(() => canvas);
+        });
       }
 
-      flipbook.turn({
-        width: 760,
-        height: 500,
-        autoCenter: true,
-        display: 'double',
-        acceleration: true,
-        gradients: true,
-        elevation: 300,
-        duration: 1500,
-        when: {
-          turning: function(event, page, view) {
-            turnAudio.currentTime = 0;
-            turnAudio.play().catch(() => {});
-          },
-          turned: function(event, page) {
-            scrollbar.value = page;
-            // Flicker-free visibility toggle
-            scrollbar.style.visibility = 'hidden';
-            scrollbar.style.opacity = '0';
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                scrollbar.style.visibility = 'visible';
-                scrollbar.style.opacity = '1';
-              });
-            });
-          }
+      async function loadPages() {
+        for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+          const canvas = await renderPage(pageNumber);
+          const pageDiv = $('<div class="page">').append(canvas);
+          pageDiv.attr('data-page-number', pageNumber);
+          flipbook.append(pageDiv);
         }
-      });
 
-      document.getElementById("loader").style.display = "none";
-      document.getElementById("flipbook").style.display = "block";
-      prevBtn.style.display = "block";
-      nextBtn.style.display = "block";
-      scrollbarContainer.style.display = "block";
+        if (totalPages % 2 !== 0) {
+          flipbook.append($('<div class="page">'));
+        }
 
-      prevBtn.addEventListener('click', () => {
-        $("#flipbook").turn("previous");
-      });
+        flipbook.turn({
+          width: 880,
+          height: 610,
+          autoCenter: true,
+          display: 'double',
+          acceleration: true,
+          gradients: true,
+          elevation: 300,
+          duration: 1500,
+          when: {
+            turning: function(event, page, view) {
+              turnAudio.currentTime = 0;
+              turnAudio.play().catch(() => {});
+            },
+            turned: function(event, page) {
+              scrollbar.value = page;
+            }
+          }
+        });
 
-      nextBtn.addEventListener('click', () => {
-        $("#flipbook").turn("next");
-      });
-    }
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("flipbook").style.display = "block";
+        prevBtn.style.display = "block";
+        nextBtn.style.display = "block";
 
-    loadImagePages();
+        scrollbarContainer.style.display = "block";
+        scrollbarContainer.style.visibility = "visible";
+
+        prevBtn.addEventListener('click', () => {
+          $("#flipbook").turn("previous");
+        });
+
+        nextBtn.addEventListener('click', () => {
+          $("#flipbook").turn("next");
+        });
+      }
+
+      loadPages();
+    }).catch(error => {
+      console.error('Error loading PDF:', error);
+      alert('Failed to load PDF. Please make sure your file is uploaded and the name matches.');
+    });
 
     scrollbar.addEventListener('input', function (e) {
       const page = parseInt(e.target.value);
@@ -283,6 +291,7 @@
       const percent = (e.clientX - rect.left) / rect.width;
       const estimatedPage = Math.round(percent * (scrollbar.max - 1)) + 1;
       const maxPage = parseInt(scrollbar.max);
+
       let label = '';
 
       if (estimatedPage === 1) {
