@@ -18,10 +18,11 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 45px 15px; /* reduced top margin by 15px */
+      padding: 45px 15px; /* top margin reduced by 15px */
       gap: 80px;
       flex-wrap: wrap;
       max-width: 100vw;
+      box-sizing: border-box;
     }
 
     #logo-caption {
@@ -134,6 +135,7 @@
   </div>
 
   <div id="main-layout">
+    <!-- Logo section (left aligned) -->
     <div id="logo-caption">
       <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
       <div class="caption">
@@ -145,32 +147,85 @@
       </div>
     </div>
 
+    <!-- Flipbook section (centered) -->
     <div id="flipbook-container">
       <div id="flipbook"></div>
 
+      <!-- Navigation Buttons -->
       <button id="prev-btn" class="nav-button">
         <img src="previous-arrow.png" alt="Previous">
       </button>
-
       <button id="next-btn" class="nav-button">
         <img src="next-arrow.png" alt="Next">
       </button>
 
+      <!-- Scrollbar aligned under the flipbook -->
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
       </div>
     </div>
   </div>
 
+  <!-- Tooltip and Audio -->
   <div id="tooltip"></div>
-
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
   <script>
-    // your JavaScript remains unchanged
+    $(document).ready(function () {
+      const $flipbook = $("#flipbook");
+      const $scrollbar = $("#page-scrollbar");
+      const $scrollbarContainer = $("#page-scrollbar-container");
+      const $prev = $("#prev-btn");
+      const $next = $("#next-btn");
+      const $loader = $("#loader");
+
+      const totalPages = 158; // Set this to your total number of pages
+
+      for (let i = 1; i <= totalPages; i++) {
+        $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
+      }
+
+      $flipbook.turn({
+        width: 760,
+        height: 500,
+        autoCenter: true,
+        elevation: 50,
+        gradients: true,
+        when: {
+          turning: function (event, page) {
+            $("#page-turn-audio")[0].play();
+            $scrollbar.val(page);
+          },
+          turned: function (event, page) {
+            $prev.toggle(page > 1);
+            $next.toggle(page < totalPages);
+          }
+        }
+      });
+
+      $scrollbar.attr("max", totalPages);
+      $scrollbar.on("input", function () {
+        const page = parseInt($(this).val());
+        $flipbook.turn("page", page);
+      });
+
+      $prev.on("click", function () {
+        $flipbook.turn("previous");
+      });
+
+      $next.on("click", function () {
+        $flipbook.turn("next");
+      });
+
+      $flipbook.show();
+      $loader.hide();
+      $scrollbarContainer.css("visibility", "visible").show();
+      $prev.show();
+      $next.show();
+    });
   </script>
 </body>
 </html>
