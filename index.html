@@ -23,7 +23,7 @@
 
     #logo-caption {
       width: 180px;
-      margin-right: 100px;
+      margin-right: 85px; /* updated from 100px to 85px */
       flex-shrink: 0;
     }
 
@@ -50,21 +50,22 @@
     }
 
     #flipbook-wrapper {
-      width: 80%;
+      width: 95%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
       justify-content: center;
       align-items: flex-end;
+      gap: 20px;
     }
 
     #flipbook {
-      width: 100%;
+      flex-grow: 1;
       height: 100%;
       display: none;
-      position: relative;
       background: transparent;
       touch-action: manipulation;
+      position: relative;
     }
 
     .page {
@@ -76,27 +77,21 @@
     }
 
     .nav-button {
-      position: absolute;
-      bottom: 0;
+      align-self: flex-end;
       background: gray;
       border: none;
       cursor: pointer;
       border-radius: 8px;
       padding: 5px;
       display: none;
-      transform: translateY(50%);
-    }
-
-    #prev-btn {
-      left: -60px;
-    }
-
-    #next-btn {
-      right: -60px;
+      margin-bottom: 0;
+      height: 50px;
+      width: 50px;
     }
 
     .nav-button img {
-      height: 40px;
+      height: 100%;
+      width: auto;
       opacity: 0.8;
     }
 
@@ -105,7 +100,7 @@
     }
 
     #page-scrollbar-container {
-      width: 80%;
+      width: 95%;
       margin-top: 15px;
       display: none;
       visibility: hidden;
@@ -180,10 +175,10 @@
     <!-- Flipbook & controls -->
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-        <div id="flipbook"></div>
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
         </button>
+        <div id="flipbook"></div>
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
