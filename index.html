@@ -15,15 +15,16 @@
       font-family: sans-serif;
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
+      overflow-x: hidden;
     }
 
     #main-layout {
       display: flex;
       align-items: flex-start;
+      justify-content: center;
       padding: 45px;
       gap: 40px;
-      max-width: 1200px;
-      margin: 0 auto;
+      flex-wrap: wrap;
     }
 
     #logo-caption {
@@ -55,10 +56,11 @@
     }
 
     #flipbook-container {
-      width: 760px;
       position: relative;
       z-index: 10;
-      margin-left: auto;
+      width: 760px;
+      display: flex;
+      justify-content: center;
     }
 
     #flipbook {
@@ -105,12 +107,14 @@
 
     #prev-btn {
       left: -60px;
-      bottom: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     #next-btn {
       right: -60px;
-      bottom: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     .nav-button img {
@@ -178,11 +182,9 @@
 
     <div id="flipbook-container">
       <div id="flipbook"></div>
-
       <button id="prev-btn" class="nav-button">
         <img src="previous-arrow.png" alt="Previous">
       </button>
-
       <button id="next-btn" class="nav-button">
         <img src="next-arrow.png" alt="Next">
       </button>
