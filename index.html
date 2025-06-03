@@ -31,7 +31,7 @@
     }
 
     .top-left-image {
-      width: 130px; /* 30% increase from 100px */
+      width: 130px;
       height: auto;
       object-fit: contain;
       display: block;
@@ -135,7 +135,6 @@
       text-align: center;
       position: relative;
       display: none;
-      visibility: hidden;
     }
 
     #page-scrollbar {
@@ -156,7 +155,6 @@
   </style>
 </head>
 <body>
-
   <div id="main-layout">
     <div id="logo">
       <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
@@ -170,11 +168,9 @@
     <div id="flipbook-wrapper">
       <div id="flipbook-container">
         <div id="flipbook"></div>
-
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
         </button>
-
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
@@ -244,6 +240,9 @@
           },
           turned: function(event, page) {
             scrollbar.value = page;
+            scrollbar.style.display = 'none';
+            void scrollbar.offsetHeight;
+            scrollbar.style.display = '';
           }
         }
       });
@@ -253,7 +252,6 @@
       prevBtn.style.display = "block";
       nextBtn.style.display = "block";
       scrollbarContainer.style.display = "block";
-      scrollbarContainer.style.visibility = "visible";
 
       prevBtn.addEventListener('click', () => {
         $("#flipbook").turn("previous");
