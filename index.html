@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
+    /* [Your original CSS remains unchanged] */
     body {
       margin: 0;
       font-family: sans-serif;
@@ -62,7 +63,6 @@
     #flipbook {
       flex-grow: 1;
       height: 100%;
-      display: none;
       background: transparent;
       touch-action: manipulation;
       position: relative;
@@ -219,49 +219,41 @@
         }
       }
 
-      $flipbook.turn({
-        width: $flipbook.width(),
-        height: $flipbook.height(),
-        autoCenter: true,
-        elevation: 50,
-        gradients: true,
-        pages: totalPages,
-        when: {
-          turning: function (event, page) {
-            $("#page-turn-audio")[0].play();
-            $scrollbar.val(page);
-
-            // Lazy load current, previous, and next pages
-            loadPage(page);
-            if (page > 1) loadPage(page - 1);
-            if (page < totalPages) loadPage(page + 1);
-          },
-          turned: function (event, page) {
-            $prev.toggle(page > 1);
-            $next.toggle(page < totalPages);
-          }
-        }
-      });
-
-      $scrollbar.attr("max", totalPages);
-      $scrollbar.on("input", function () {
-        $flipbook.turn("page", parseInt($(this).val()));
-      });
-
-      $prev.on("click", function () {
-        $flipbook.turn("previous");
-      });
-
-      $next.on("click", function () {
-        $flipbook.turn("next");
-      });
-
+      // Show flipbook first, then initialize after layout is ready
       $flipbook.show();
-      $flipbook.turn("resize"); // Fix initial width issue
-      $loader.hide();
-      $scrollbarContainer.css("visibility", "visible").show();
-      $prev.show();
-      $next.show();
+
+      setTimeout(() => {
+        $flipbook.turn({
+          width: $flipbook.width(),
+          height: $flipbook.height(),
+          autoCenter: true,
+          elevation: 50,
+          gradients: true,
+          pages: totalPages,
+          when: {
+            turning: function (event, page) {
+              $("#page-turn-audio")[0].play();
+              $scrollbar.val(page);
+
+              // Lazy load current, previous, and next pages
+              loadPage(page);
+              if (page > 1) loadPage(page - 1);
+              if (page < totalPages) loadPage(page + 1);
+            },
+            turned: function (event, page) {
+              $prev.toggle(page > 1);
+              $next.toggle(page < totalPages);
+            }
+          }
+        });
+
+        $flipbook.turn("resize"); // Ensure correct sizing
+        $loader.hide();
+        $scrollbar.attr("max", totalPages);
+        $scrollbarContainer.css("visibility", "visible").show();
+        $prev.show();
+        $next.show();
+      }, 100); // Delay to ensure layout is ready
     });
   </script>
 </body>
