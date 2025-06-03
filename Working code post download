@@ -2,43 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OOTB 2025 - Timothy Edwards Middle School</title>
-
-  <!-- jQuery -->
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Turn.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
-
   <style>
     body {
       margin: 0;
-      background: #89CFF0;
       font-family: sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+    }
+
+#main-layout {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 30px;
+      flex-wrap: wrap;
+      max-width: 100vw;
+      box-sizing: border-box;
+    }
+
+  #logo-caption {
+      width: 180px;
+      margin-left: -80px; /* Move logo 40px further left */
+      margin-right: 100px; /* Keep space between logo and flipbook */
+      flex-shrink: 0;
+    }
+
+    #logo-caption img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #logo-caption .caption {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    #logo-caption .address {
+      font-size: 13px;
+      line-height: 1.3;
     }
 
     #flipbook-container {
       width: 760px;
-      margin: 60px auto 0;
       position: relative;
       z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left:30px;
+      border:1;
     }
 
-    #flipbook {
+    #flipbook-wrapper {
       width: 760px;
       height: 500px;
-      margin: 0 auto;
+      position: relative;
+    }
+    
+     #flipbook {
+      width: 760px;
+      height: 500px;
       position: relative;
       z-index: 10;
       display: none;
       touch-action: manipulation;
       pointer-events: auto;
-    }
-
-    #loader {
-      font-family: Arial;
-      color: white;
-      text-align: center;
-      margin-top: 100px;
+      border: none; /* ❌ No visible border */
+      border-radius: 6px; /* Optional: soft corners */
+      background: transparent; /* Let page edges show naturally */
+    
     }
 
     .page {
@@ -49,21 +86,11 @@
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
       position: relative;
       z-index: 1;
-      touch-action: manipulation;
-      pointer-events: auto;
-    }
-
-    canvas, img {
-      width: 100%;
-      height: 100%;
-      image-rendering: crisp-edges;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: optimizeSpeed;
-      -ms-interpolation-mode: nearest-neighbor;
     }
 
     .nav-button {
       position: absolute;
+      bottom: 0; /* Bottom-align buttons with flipbook */
       background: gray;
       border: none;
       cursor: pointer;
@@ -75,17 +102,10 @@
 
     #prev-btn {
       left: -60px;
-      bottom: 0;
     }
 
     #next-btn {
       right: -60px;
-      bottom: 0;
-    }
-
-    #download-btn {
-      right: -120px;
-      bottom: 0;
     }
 
     .nav-button img {
@@ -99,31 +119,9 @@
       opacity: 1;
     }
 
-    #download-btn::after {
-      content: "Download";
-      position: absolute;
-      bottom: 100%;
-      right: 0;
-      margin-bottom: 6px;
-      background: #333;
-      color: white;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      z-index: 1001;
-    }
-
-    #download-btn:hover::after {
-      opacity: 1;
-    }
-
     #page-scrollbar-container {
       width: 760px;
-      margin: 10px auto 0;
+      margin-top: 10px;
       text-align: center;
       position: relative;
       display: none;
@@ -145,6 +143,13 @@
       pointer-events: none;
       z-index: 1001;
     }
+
+    #loader {
+      font-family: Arial;
+      color: white;
+      text-align: center;
+      margin-top: 100px;
+    }
   </style>
 </head>
 <body>
@@ -153,160 +158,99 @@
     <p>Loading flipbook, please wait...</p>
   </div>
 
-  <div id="flipbook-container">
-    <div id="flipbook"></div>
+  <div id="main-layout">
+    <!-- Logo section (left) -->
+    <div id="logo-caption">
+      <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
+      <div class="caption">
+        <b>TIMOTHY EDWARDS</b> Middle School<br><br>
+        <div class="address">
+          <i>100 Arnold Way<br>
+          South Windsor, CT 06074</i>
+        </div>
+      </div>
+    </div>
 
-    <button id="prev-btn" class="nav-button">
-      <img src="previous-arrow.png" alt="Previous">
-    </button>
+    <!-- Flipbook section -->
+    <div id="flipbook-container">
+      <div id="flipbook-wrapper">
+        <div id="flipbook"></div>
 
-    <button id="next-btn" class="nav-button">
-      <img src="next-arrow.png" alt="Next">
-    </button>
+        <!-- Navigation Buttons -->
+        <button id="prev-btn" class="nav-button">
+          <img src="previous-arrow.png" alt="Previous">
+        </button>
+        <button id="next-btn" class="nav-button">
+          <img src="next-arrow.png" alt="Next">
+        </button>
+      </div>
 
-    <a id="download-btn" class="nav-button" href="OOTB2025.pdf" download>
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download">
-    </a>
+      <!-- Scrollbar aligned under the flipbook -->
+      <div id="page-scrollbar-container">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+      </div>
+    </div>
   </div>
 
-  <div id="page-scrollbar-container">
-    <input type="range" id="page-scrollbar" min="1" max="1" value="1">
-  </div>
-
+  <!-- Tooltip and Audio -->
   <div id="tooltip"></div>
-
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
   <script>
-    document.getElementById("loader").style.display = "block";
+    $(document).ready(function () {
+      const $flipbook = $("#flipbook");
+      const $scrollbar = $("#page-scrollbar");
+      const $scrollbarContainer = $("#page-scrollbar-container");
+      const $prev = $("#prev-btn");
+      const $next = $("#next-btn");
+      const $loader = $("#loader");
 
-    const totalPages = 158;
-    const flipbook = $('#flipbook');
-    const scrollbar = document.getElementById("page-scrollbar");
-    const scrollbarContainer = document.getElementById("page-scrollbar-container");
-    const prevBtn = document.getElementById("prev-btn");
-    const nextBtn = document.getElementById("next-btn");
-    const tooltip = document.getElementById("tooltip");
-    const turnAudio = document.getElementById("page-turn-audio");
-    const downloadBtn = document.getElementById("download-btn");
-    turnAudio.volume = 0.4;
+      const totalPages = 158;
 
-    scrollbar.max = totalPages;
-
-    async function loadImagePages() {
       for (let i = 1; i <= totalPages; i++) {
-        const img = document.createElement('img');
-        img.src = `pages/Page_${i}.png`;
-        img.alt = `Page ${i}`;
-        const pageDiv = $('<div class="page">').append(img);
-        pageDiv.attr('data-page-number', i);
-        flipbook.append(pageDiv);
+        $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
       }
 
-      if (totalPages % 2 !== 0) {
-        flipbook.append($('<div class="page">'));
-      }
-
-      flipbook.turn({
+      $flipbook.turn({
         width: 760,
         height: 500,
         autoCenter: true,
-        display: 'double',
-        acceleration: true,
+        elevation: 50,
         gradients: true,
-        elevation: 300,
-        duration: 1500,
         when: {
-          turning: function(event, page, view) {
-            turnAudio.currentTime = 0;
-            turnAudio.play().catch(() => {});
+          turning: function (event, page) {
+            $("#page-turn-audio")[0].play();
+            $scrollbar.val(page);
           },
-          turned: function(event, page) {
-            scrollbar.value = page;
+          turned: function (event, page) {
+            $prev.toggle(page > 1);
+            $next.toggle(page < totalPages);
           }
         }
       });
 
-      document.getElementById("loader").style.display = "none";
-      document.getElementById("flipbook").style.display = "block";
-      prevBtn.style.display = "block";
-      nextBtn.style.display = "block";
-      downloadBtn.style.display = "block";
-      scrollbarContainer.style.display = "block";
-      scrollbarContainer.style.visibility = "visible";
-
-      prevBtn.addEventListener('click', () => {
-        $("#flipbook").turn("previous");
+      $scrollbar.attr("max", totalPages);
+      $scrollbar.on("input", function () {
+        const page = parseInt($(this).val());
+        $flipbook.turn("page", page);
       });
 
-      nextBtn.addEventListener('click', () => {
-        $("#flipbook").turn("next");
+      $prev.on("click", function () {
+        $flipbook.turn("previous");
       });
-    }
 
-    loadImagePages();
+      $next.on("click", function () {
+        $flipbook.turn("next");
+      });
 
-    scrollbar.addEventListener('input', function (e) {
-      const page = parseInt(e.target.value);
-      $("#flipbook").turn("page", page);
-    });
-
-    scrollbar.addEventListener('mousemove', function (e) {
-      const rect = scrollbar.getBoundingClientRect();
-      const percent = (e.clientX - rect.left) / rect.width;
-      const estimatedPage = Math.round(percent * (scrollbar.max - 1)) + 1;
-      const maxPage = parseInt(scrollbar.max);
-      let label = '';
-
-      if (estimatedPage === 1) {
-        label = 'Front Cover';
-      } else if (estimatedPage === 2 || estimatedPage === 3) {
-        label = 'Introduction';
-      } else if (estimatedPage === maxPage) {
-        label = 'Back Cover';
-      } else {
-        const logicalPage = estimatedPage - 3;
-        const left = logicalPage % 2 === 0 ? logicalPage - 1 : logicalPage;
-        const right = left + 1;
-        label = `Pages ${left}–${right}`;
-      }
-
-      tooltip.style.left = (e.pageX - 20) + "px";
-      tooltip.style.top = (e.pageY - 40) + "px";
-      tooltip.style.display = "block";
-      tooltip.innerText = label;
-    });
-
-    scrollbar.addEventListener('mouseleave', function () {
-      tooltip.style.display = "none";
-    });
-
-    // ✅ Mouse drag flipping support (for Windows desktop)
-    let isMouseDown = false;
-    let dragStartX = 0;
-
-    document.getElementById("flipbook").addEventListener("mousedown", function(e) {
-      isMouseDown = true;
-      dragStartX = e.pageX;
-    });
-
-    document.addEventListener("mouseup", function(e) {
-      if (!isMouseDown) return;
-      isMouseDown = false;
-
-      const dragEndX = e.pageX;
-      const diff = dragEndX - dragStartX;
-
-      if (Math.abs(diff) > 40) {
-        if (diff > 0) {
-          $("#flipbook").turn("previous");
-        } else {
-          $("#flipbook").turn("next");
-        }
-      }
+      $flipbook.show();
+      $loader.hide();
+      $scrollbarContainer.css("visibility", "visible").show();
+      $prev.show();
+      $next.show();
     });
   </script>
 </body>
