@@ -14,38 +14,38 @@
       overflow-x: hidden;
     }
 
+    #logo-caption {
+      position: absolute;
+      top: 45px;
+      left: 20px;
+      width: 180px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    #logo-caption img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #logo-caption .caption {
+      margin-top: 10px;
+    }
+
+    #logo-caption .address {
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
     #main-layout {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 45px 15px; /* top margin reduced by 15px */
-      gap: 80px;
-      flex-wrap: wrap;
+      padding: 45px 15px;
       max-width: 100vw;
       box-sizing: border-box;
     }
-
-   #logo-caption {
-  width: 180px;
-  margin-left: -20px; /* Moves logo 20px to the left */
-}
-
-#logo-caption img {
-  width: 100%;
-  height: auto;
-  display: block; /* Ensures no inline spacing */
-}
-
-#logo-caption .caption {
-  text-align: center; /* Center-aligns caption text */
-  margin-top: 10px;
-}
-
-#logo-caption .address {
-  font-size: 13px;
-  line-height: 1.3;
-}
-
 
     #flipbook-container {
       width: 760px;
@@ -141,25 +141,26 @@
   </style>
 </head>
 <body>
+  <!-- Loader -->
   <div id="loader">
     <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
     <p>Loading flipbook, please wait...</p>
   </div>
 
-  <div id="main-layout">
-    <!-- Logo section (left aligned) -->
-    <div id="logo-caption">
-      <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
-      <div class="caption">
-        <b>TIMOTHY EDWARDS</b> Middle School<br>
-        <div class="address">
-          <i>100 Arnold Way<br>
-          South Windsor, CT 06074</i>
-        </div>
+  <!-- Fixed left-aligned logo -->
+  <div id="logo-caption">
+    <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
+    <div class="caption">
+      <b>TIMOTHY EDWARDS</b> Middle School<br>
+      <div class="address">
+        <i>100 Arnold Way<br>
+        South Windsor, CT 06074</i>
       </div>
     </div>
+  </div>
 
-    <!-- Flipbook section (centered) -->
+  <!-- Centered flipbook -->
+  <div id="main-layout">
     <div id="flipbook-container">
       <div id="flipbook"></div>
 
@@ -194,7 +195,7 @@
       const $next = $("#next-btn");
       const $loader = $("#loader");
 
-      const totalPages = 158; // Set this to your total number of pages
+      const totalPages = 158;
 
       for (let i = 1; i <= totalPages; i++) {
         $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
