@@ -22,15 +22,15 @@
       padding: 20px;
     }
 
-  #logo {
-          margin-right: 20px;
-          background-color: #ADD8E6;
-          padding: 10px;
-          border-radius: 8px;
-        }
+    #logo {
+      margin-right: 20px;
+      background-color: #ADD8E6;
+      padding: 10px;
+      border-radius: 8px;
+    }
 
     .top-left-image {
-      width: 150px;
+      width: 100px;
       height: auto;
       object-fit: contain;
     }
@@ -119,8 +119,8 @@
     }
 
     #page-scrollbar-container {
-      width: 760px;
-      margin: 10px auto 0;
+      width: 100%;
+      margin-top: 10px;
       text-align: center;
       position: relative;
       display: none;
@@ -162,6 +162,10 @@
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
+
+        <div id="page-scrollbar-container">
+          <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+        </div>
       </div>
     </div>
   </div>
@@ -169,10 +173,6 @@
   <div id="loader">
     <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
     <p>Loading flipbook, please wait...</p>
-  </div>
-
-  <div id="page-scrollbar-container">
-    <input type="range" id="page-scrollbar" min="1" max="1" value="1">
   </div>
 
   <div id="tooltip"></div>
