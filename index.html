@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
     :root {
-      --flipbook-width: 760px;
-      --flipbook-height: 500px;
+      --flipbook-max-width: 760px;
+      --flipbook-aspect-ratio: 500 / 760;
     }
 
     body {
@@ -54,19 +55,20 @@
       flex-grow: 1;
       max-width: calc(100vw - 80px - 240px); /* 40px padding each side + logo space */
       box-sizing: border-box;
+      position: relative; /* for absolute buttons */
     }
 
     #flipbook-wrapper {
       width: 100%;
-      max-width: var(--flipbook-width);
-      height: var(--flipbook-height);
-      position: relative;
+      max-width: var(--flipbook-max-width);
       margin: 0 auto;
+      position: relative;
+      /* height will be set dynamically */
     }
 
     #flipbook {
       width: 100%;
-      height: var(--flipbook-height);
+      height: 100%;
       position: relative;
       z-index: 10;
       display: none;
@@ -79,7 +81,7 @@
 
     .page {
       width: 50%;
-      height: var(--flipbook-height);
+      height: 100%;
       background: white;
       overflow: hidden;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
@@ -120,7 +122,7 @@
 
     #page-scrollbar-container {
       width: 100%;
-      max-width: var(--flipbook-width);
+      max-width: var(--flipbook-max-width);
       margin: 10px auto 0;
       text-align: center;
       position: relative;
@@ -170,19 +172,21 @@
 </head>
 <body>
   <div id="loader">
-    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
+    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60" />
     <p>Loading flipbook, please wait...</p>
   </div>
 
   <div id="main-layout">
     <!-- Logo section -->
     <div id="logo-caption">
-      <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
+      <img src="TEMSLogo.png" alt="Timothy Edwards Logo" />
       <div class="caption">
-        <b>TIMOTHY EDWARDS</b> Middle School<br><br>
+        <b>TIMOTHY EDWARDS</b> Middle School<br /><br />
         <div class="address">
-          <i>100 Arnold Way<br>
-          South Windsor, CT 06074</i>
+          <i>
+            100 Arnold Way<br />
+            South Windsor, CT 06074
+          </i>
         </div>
       </div>
     </div>
@@ -193,15 +197,15 @@
         <div id="flipbook"></div>
 
         <button id="prev-btn" class="nav-button">
-          <img src="previous-arrow.png" alt="Previous">
+          <img src="previous-arrow.png" alt="Previous" />
         </button>
         <button id="next-btn" class="nav-button">
-          <img src="next-arrow.png" alt="Next">
+          <img src="next-arrow.png" alt="Next" />
         </button>
       </div>
 
       <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1" />
       </div>
     </div>
   </div>
@@ -209,62 +213,120 @@
   <!-- Tooltip and Audio -->
   <div id="tooltip"></div>
   <audio id="page-turn-audio" preload="auto">
-    <source src="turn.mp3" type="audio/mpeg">
+    <source src="turn.mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
 
   <script>
     $(document).ready(function () {
-      const $flipbook = $("#flipbook");
+      let $flipbook = $("#flipbook");
       const $scrollbar = $("#page-scrollbar");
       const $scrollbarContainer = $("#page-scrollbar-container");
       const $prev = $("#prev-btn");
       const $next = $("#next-btn");
       const $loader = $("#loader");
-
       const totalPages = 158;
 
+      // Append pages once
       for (let i = 1; i <= totalPages; i++) {
-        $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
+        $flipbook.append(
+          '<div class="page"><img src="pages/Page_' +
+            i +
+            '.png" width="100%" height="100%"></div>'
+        );
       }
 
-      $flipbook.turn({
-        width: 760,
-        height: 500,
-        autoCenter: true,
-        elevation: 50,
-        gradients: true,
-        when: {
-          turning: function (event, page) {
-            $("#page-turn-audio")[0].play();
-            $scrollbar.val(page);
-          },
-          turned: function (event, page) {
-            $prev.toggle(page > 1);
-            $next.toggle(page < totalPages);
+      // Calculate flipbook size based on window width minus logo+margin+padding
+      function getFlipbookSize() {
+        const windowWidth = $(window).width();
+
+        // Fixed sizes: logo(180) + margin(60) + padding left/right(40*2=80)
+        const sideOccupied = 180 + 60 + 80;
+
+        // Available width for flipbook
+        let availableWidth = windowWidth - sideOccupied;
+
+        // Limit max width to 760px
+        if (availableWidth > 760) availableWidth = 760;
+
+        // Calculate height keeping aspect ratio 760:500
+        const height = Math.round((availableWidth * 500) / 760);
+
+        return { width: Math.round(availableWidth), height: height };
+      }
+
+      function initFlipbook() {
+        // If already initialized, destroy to re-init on resize
+        if ($flipbook.data("turn")) {
+          $flipbook.turn("destroy");
+          $flipbook.empty();
+          // Re-append pages
+          for (let i = 1; i <= totalPages; i++) {
+            $flipbook.append(
+              '<div class="page"><img src="pages/Page_' +
+                i +
+                '.png" width="100%" height="100%"></div>'
+            );
           }
         }
+
+        const size = getFlipbookSize();
+
+        // Set wrapper height explicitly to keep layout correct
+        $("#flipbook-wrapper").css("height", size.height + "px");
+
+        $flipbook.turn({
+          width: size.width,
+          height: size.height,
+          autoCenter: true,
+          elevation: 50,
+          gradients: true,
+          when: {
+            turning: function (event, page) {
+              $("#page-turn-audio")[0].play();
+              $scrollbar.val(page);
+            },
+            turned: function (event, page) {
+              $prev.toggle(page > 1);
+              $next.toggle(page < totalPages);
+            },
+          },
+        });
+
+        $flipbook.show();
+        $loader.hide();
+        $scrollbarContainer.css("visibility", "visible").show();
+        $prev.show();
+        $next.show();
+
+        $scrollbar.attr("max", totalPages);
+      }
+
+      // Init flipbook on page load
+      initFlipbook();
+
+      // Debounced resize handling
+      let resizeTimer;
+      $(window).on("resize", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          initFlipbook();
+        }, 300);
       });
 
-      $scrollbar.attr("max", totalPages);
+      // Scrollbar input
       $scrollbar.on("input", function () {
         const page = parseInt($(this).val());
         $flipbook.turn("page", page);
       });
 
+      // Prev/Next buttons
       $prev.on("click", function () {
         $flipbook.turn("previous");
       });
-
       $next.on("click", function () {
         $flipbook.turn("next");
       });
-
-      $flipbook.show();
-      $loader.hide();
-      $scrollbarContainer.css("visibility", "visible").show();
-      $prev.show();
-      $next.show();
     });
   </script>
 </body>
