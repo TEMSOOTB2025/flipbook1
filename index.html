@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -204,7 +204,7 @@
       const $loader = $("#loader");
 
       const totalPages = 158;
-      const initialPages = 5;
+      const initialPages = 20;
 
       // Load only the first 20 pages initially
       for (let i = 1; i <= initialPages; i++) {
@@ -257,6 +257,7 @@
       });
 
       $flipbook.show();
+      $flipbook.turn("resize"); // Fix initial width issue
       $loader.hide();
       $scrollbarContainer.css("visibility", "visible").show();
       $prev.show();
