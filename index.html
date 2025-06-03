@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: sans-serif;
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
@@ -18,17 +20,16 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 20px 30px;
+      padding: 20px;
       flex-wrap: wrap;
-      max-width: 100vw;
+      width: 100%;
       box-sizing: border-box;
     }
 
     #logo-caption {
-      width: 180px;
-      margin-left: -80px;
-      margin-right: 100px;
-      flex-shrink: 0;
+      flex: 1 1 200px;
+      max-width: 300px;
+      margin-right: 20px;
     }
 
     #logo-caption img {
@@ -48,40 +49,34 @@
     }
 
     #flipbook-container {
-      width: 100%;
-      max-width: 1000px;
-      position: relative;
-      z-index: 10;
+      flex: 1 1 600px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-left: 30px;
     }
 
     #flipbook-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       width: 100%;
-      max-width: 100%;
+      max-width: 90vw;
+      aspect-ratio: 3 / 2;
       position: relative;
-      margin-bottom: 20px;
-      flex-wrap: nowrap;
     }
 
     #flipbook {
-      flex: 0 0 75%;
-      max-width: 75%;
-      aspect-ratio: 760 / 500;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 10;
       display: none;
       touch-action: manipulation;
       pointer-events: auto;
+      border: none;
       border-radius: 6px;
       background: transparent;
     }
 
     .page {
-      width: 100%;
+      width: 50%;
       height: 100%;
       background: white;
       overflow: hidden;
@@ -94,11 +89,9 @@
       background: gray;
       border: none;
       cursor: pointer;
+      z-index: 1000;
       border-radius: 8px;
       padding: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .nav-button img {
@@ -108,30 +101,29 @@
       transition: opacity 0.3s;
     }
 
-    .nav-button:disabled img {
-      opacity: 0.3;
+    .nav-button img:hover {
+      opacity: 1;
     }
 
     #nav-left, #nav-right {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      bottom: -50px;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 10px;
     }
 
     #nav-left {
-      left: -60px;
+      left: 0;
     }
 
     #nav-right {
-      right: -60px;
+      right: 0;
     }
 
     #page-scrollbar-container {
       width: 100%;
-      max-width: 75%;
+      max-width: 90vw;
       margin-top: 10px;
       text-align: center;
       position: relative;
@@ -161,6 +153,16 @@
       text-align: center;
       margin-top: 100px;
     }
+
+    @media (max-width: 600px) {
+      #nav-left, #nav-right {
+        bottom: -60px;
+      }
+      .nav-button img {
+        height: 24px;
+        width: 24px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -170,7 +172,6 @@
   </div>
 
   <div id="main-layout">
-    <!-- Logo section -->
     <div id="logo-caption">
       <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
       <div class="caption">
@@ -182,9 +183,10 @@
       </div>
     </div>
 
-    <!-- Flipbook section -->
     <div id="flipbook-container">
       <div id="flipbook-wrapper">
+        <div id="flipbook"></div>
+
         <div id="nav-left">
           <button id="first-btn" class="nav-button">
             <img src="first-page.png" alt="First Page">
@@ -193,8 +195,6 @@
             <img src="previous-arrow.png" alt="Previous">
           </button>
         </div>
-
-        <div id="flipbook"></div>
 
         <div id="nav-right">
           <button id="next-btn" class="nav-button">
@@ -206,14 +206,12 @@
         </div>
       </div>
 
-      <!-- Scrollbar -->
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
       </div>
     </div>
   </div>
 
-  <!-- Tooltip and Audio -->
   <div id="tooltip"></div>
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
@@ -234,12 +232,12 @@
       const totalPages = 158;
 
       for (let i = 1; i <= totalPages; i++) {
-        $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
+        $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" style="width:100%; height:100%; object-fit: cover;"></div>');
       }
 
       $flipbook.turn({
-        width: $flipbook.width(),
-        height: $flipbook.height(),
+        width: $flipbook.parent().width(),
+        height: $flipbook.parent().height(),
         autoCenter: true,
         elevation: 50,
         gradients: true,
@@ -249,10 +247,10 @@
             $scrollbar.val(page);
           },
           turned: function (event, page) {
-            $prev.prop("disabled", page === 1);
-            $first.prop("disabled", page === 1);
-            $next.prop("disabled", page === totalPages);
-            $last.prop("disabled", page === totalPages);
+            $prev.prop('disabled', page === 1);
+            $first.prop('disabled', page === 1);
+            $next.prop('disabled', page === totalPages);
+            $last.prop('disabled', page === totalPages);
           }
         }
       });
