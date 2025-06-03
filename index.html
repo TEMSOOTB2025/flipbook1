@@ -25,15 +25,27 @@
       box-sizing: border-box;
     }
 
-    #logo-caption {
-      width: 180px;
-      text-align: left;
-    }
+   #logo-caption {
+  width: 180px;
+  margin-left: -20px; /* Moves logo 20px to the left */
+}
 
-    #logo-caption img {
-      width: 100%;
-      height: auto;
-    }
+#logo-caption img {
+  width: 100%;
+  height: auto;
+  display: block; /* Ensures no inline spacing */
+}
+
+#logo-caption .caption {
+  text-align: center; /* Center-aligns caption text */
+  margin-top: 10px;
+}
+
+#logo-caption .address {
+  font-size: 13px;
+  line-height: 1.3;
+}
+
 
     #flipbook-container {
       width: 760px;
