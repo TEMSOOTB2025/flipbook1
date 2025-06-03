@@ -10,21 +10,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
 
   <style>
-     body {
+    body {
       margin: 0;
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
       font-family: sans-serif;
     }
 
-
     #main-layout {
       display: flex;
       align-items: flex-start;
       padding: 20px;
+      display: none; /* Hide initially */
     }
 
-   #logo {
+    #logo {
       margin-right: 20px;
       background: url('background.png') no-repeat center center;
       background-size: cover;
@@ -32,7 +32,6 @@
       text-align: center;
       display: inline-block;
     }
-
 
     .top-left-image {
       width: 130px;
@@ -42,16 +41,16 @@
       margin: 0 auto;
     }
 
-#logo-caption {
-  font-size: 14px;
-  color: #000;
-  margin-top: 5px;
-  line-height: 1.4;
-  background: url('background.png') no-repeat center center;
-  background-size: cover;
-  padding: 8px;
-  border-radius: 6px;
-}
+    #logo-caption {
+      font-size: 14px;
+      color: #000;
+      margin-top: 5px;
+      line-height: 1.4;
+      background: url('background.png') no-repeat center center;
+      background-size: cover;
+      padding: 8px;
+      border-radius: 6px;
+    }
 
     #flipbook-wrapper {
       flex: 1;
@@ -163,11 +162,16 @@
   </style>
 </head>
 <body>
+  <div id="loader" role="status" aria-live="polite">
+    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading flipbook..." width="100">
+    <p>Loading flipbook, please wait...</p>
+  </div>
+
   <div id="main-layout">
     <div id="logo">
-      <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
+      <img src="TEMSLogo.png" alt="Timothy Edwards Middle School Logo" class="top-left-image">
      
-        <b>TIMOTHY EDWARDS</b><br>Middle School<br>
+        <br><b>TIMOTHY EDWARDS</b><br>Middle School<br><br>
         <i>100 Arnold Way</i><br>
         <i>South Windsor, Connecticut</i>
       
@@ -175,27 +179,22 @@
 
     <div id="flipbook-wrapper">
       <div id="flipbook-container">
-        <div id="flipbook"></div>
-        <button id="prev-btn" class="nav-button">
-          <img src="previous-arrow.png" alt="Previous">
+        <div id="flipbook" role="region" aria-label="Flipbook Viewer"></div>
+        <button id="prev-btn" class="nav-button" aria-label="Previous Page">
+          <img src="previous-arrow.png" alt="Previous Page">
         </button>
-        <button id="next-btn" class="nav-button">
-          <img src="next-arrow.png" alt="Next">
+        <button id="next-btn" class="nav-button" aria-label="Next Page">
+          <img src="next-arrow.png" alt="Next Page">
         </button>
       </div>
 
       <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1" aria-label="Page Slider">
       </div>
     </div>
   </div>
 
-  <div id="loader">
-    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
-    <p>Loading flipbook, please wait...</p>
-  </div>
-
-  <div id="tooltip"></div>
+  <div id="tooltip" role="tooltip"></div>
 
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
@@ -217,19 +216,16 @@
 
     scrollbar.max = totalPages;
 
+    let canPlayAudio = true;
+
     async function loadImagePages() {
       for (let i = 1; i <= totalPages; i++) {
         const img = document.createElement('img');
         img.src = `pages/Page_${i}.png`;
         img.alt = `Page ${i}`;
-
         const pageDiv = $('<div class="page">').append(img);
         pageDiv.attr('data-page-number', i);
         flipbook.append(pageDiv);
-      }
-
-      if (totalPages % 2 !== 0) {
-        flipbook.append($('<div class="page">'));
       }
 
       flipbook.turn({
@@ -243,8 +239,13 @@
         duration: 1500,
         when: {
           turning: function(event, page, view) {
-            turnAudio.currentTime = 0;
-            turnAudio.play().catch(() => {});
+            if (canPlayAudio) {
+              canPlayAudio = false;
+              turnAudio.currentTime = 0;
+              turnAudio.play().finally(() => {
+                setTimeout(() => canPlayAudio = true, 500);
+              });
+            }
           },
           turned: function(event, page) {
             scrollbar.value = page;
@@ -256,6 +257,7 @@
       });
 
       document.getElementById("loader").style.display = "none";
+      document.getElementById("main-layout").style.display = "flex";
       document.getElementById("flipbook").style.display = "block";
       prevBtn.style.display = "block";
       nextBtn.style.display = "block";
