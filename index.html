@@ -21,7 +21,6 @@
       display: flex;
       align-items: flex-start;
       padding: 20px;
-      display: none; /* Hide initially */
     }
 
     #logo {
@@ -146,6 +145,7 @@
 
     #page-scrollbar {
       width: 100%;
+      transition: opacity 0.2s ease; /* Smooth fade */
     }
 
     #tooltip {
@@ -162,39 +162,39 @@
   </style>
 </head>
 <body>
-  <div id="loader" role="status" aria-live="polite">
-    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading flipbook..." width="100">
-    <p>Loading flipbook, please wait...</p>
-  </div>
-
   <div id="main-layout">
     <div id="logo">
-      <img src="TEMSLogo.png" alt="Timothy Edwards Middle School Logo" class="top-left-image">
-     
-        <br><b>TIMOTHY EDWARDS</b><br>Middle School<br><br>
+      <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
+      <div id="logo-caption">
+        <b>TIMOTHY EDWARDS</b><br>Middle School<br>
         <i>100 Arnold Way</i><br>
         <i>South Windsor, Connecticut</i>
-      
+      </div>
     </div>
 
     <div id="flipbook-wrapper">
       <div id="flipbook-container">
-        <div id="flipbook" role="region" aria-label="Flipbook Viewer"></div>
-        <button id="prev-btn" class="nav-button" aria-label="Previous Page">
-          <img src="previous-arrow.png" alt="Previous Page">
+        <div id="flipbook"></div>
+        <button id="prev-btn" class="nav-button">
+          <img src="previous-arrow.png" alt="Previous">
         </button>
-        <button id="next-btn" class="nav-button" aria-label="Next Page">
-          <img src="next-arrow.png" alt="Next Page">
+        <button id="next-btn" class="nav-button">
+          <img src="next-arrow.png" alt="Next">
         </button>
       </div>
 
       <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar" min="1" max="1" value="1" aria-label="Page Slider">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
       </div>
     </div>
   </div>
 
-  <div id="tooltip" role="tooltip"></div>
+  <div id="loader">
+    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
+    <p>Loading flipbook, please wait...</p>
+  </div>
+
+  <div id="tooltip"></div>
 
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
@@ -216,13 +216,12 @@
 
     scrollbar.max = totalPages;
 
-    let canPlayAudio = true;
-
     async function loadImagePages() {
       for (let i = 1; i <= totalPages; i++) {
         const img = document.createElement('img');
         img.src = `pages/Page_${i}.png`;
         img.alt = `Page ${i}`;
+
         const pageDiv = $('<div class="page">').append(img);
         pageDiv.attr('data-page-number', i);
         flipbook.append(pageDiv);
@@ -239,25 +238,25 @@
         duration: 1500,
         when: {
           turning: function(event, page, view) {
-            if (canPlayAudio) {
-              canPlayAudio = false;
-              turnAudio.currentTime = 0;
-              turnAudio.play().finally(() => {
-                setTimeout(() => canPlayAudio = true, 500);
-              });
-            }
+            turnAudio.currentTime = 0;
+            turnAudio.play().catch(() => {});
           },
           turned: function(event, page) {
             scrollbar.value = page;
-            scrollbar.style.display = 'none';
-            void scrollbar.offsetHeight;
-            scrollbar.style.display = '';
+            // Flicker-free visibility toggle
+            scrollbar.style.visibility = 'hidden';
+            scrollbar.style.opacity = '0';
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                scrollbar.style.visibility = 'visible';
+                scrollbar.style.opacity = '1';
+              });
+            });
           }
         }
       });
 
       document.getElementById("loader").style.display = "none";
-      document.getElementById("main-layout").style.display = "flex";
       document.getElementById("flipbook").style.display = "block";
       prevBtn.style.display = "block";
       nextBtn.style.display = "block";
