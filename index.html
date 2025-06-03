@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -31,7 +31,7 @@
     }
 
     .top-left-image {
-      width: 130px;
+      width: 130px; /* 30% increase from 100px */
       height: auto;
       object-fit: contain;
       display: block;
@@ -135,6 +135,7 @@
       text-align: center;
       position: relative;
       display: none;
+      visibility: hidden;
     }
 
     #page-scrollbar {
@@ -155,6 +156,7 @@
   </style>
 </head>
 <body>
+
   <div id="main-layout">
     <div id="logo">
       <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
@@ -168,9 +170,11 @@
     <div id="flipbook-wrapper">
       <div id="flipbook-container">
         <div id="flipbook"></div>
+
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
         </button>
+
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
@@ -212,8 +216,8 @@
     async function loadImagePages() {
       for (let i = 1; i <= totalPages; i++) {
         const img = document.createElement('img');
-        img.src = `pages/Page_${i}.png`;
-        img.alt = `Page ${i}`;
+        img.src = pages/Page_${i}.png;
+        img.alt = Page ${i};
 
         const pageDiv = $('<div class="page">').append(img);
         pageDiv.attr('data-page-number', i);
@@ -240,9 +244,6 @@
           },
           turned: function(event, page) {
             scrollbar.value = page;
-            scrollbar.style.display = 'none';
-            void scrollbar.offsetHeight;
-            scrollbar.style.display = '';
           }
         }
       });
@@ -252,6 +253,7 @@
       prevBtn.style.display = "block";
       nextBtn.style.display = "block";
       scrollbarContainer.style.display = "block";
+      scrollbarContainer.style.visibility = "visible";
 
       prevBtn.addEventListener('click', () => {
         $("#flipbook").turn("previous");
@@ -286,7 +288,7 @@
         const logicalPage = estimatedPage - 3;
         const left = logicalPage % 2 === 0 ? logicalPage - 1 : logicalPage;
         const right = left + 1;
-        label = `Pages ${left}–${right}`;
+        label = Pages ${left}–${right};
       }
 
       tooltip.style.left = (e.pageX - 20) + "px";
