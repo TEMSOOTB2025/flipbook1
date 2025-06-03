@@ -76,28 +76,31 @@
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
     }
 
-    .nav-button {
+   
+   .nav-button {
       position: absolute;
-      bottom: 0; /* Align to bottom */
+      bottom: 0; /* Bottom-align buttons with flipbook */
       background: gray;
       border: none;
       cursor: pointer;
-      border-radius: 5px;
+      z-index: 1000;
+      border-radius: 3px;
       padding: 5px;
       display: none;
-      height: 20px;
-      width: 20px;
-      z-index: 10;
     }
-
-    #prev-btn {
-      left: 0;
+     #prev-btn {
+      left: -60px;
     }
 
     #next-btn {
-      right: 0;
+      right: -60px;
     }
-
+        .nav-button img {
+      height: 40px;
+      width: auto;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
     #page-scrollbar-container {
       width: calc(90% - 100px);
       margin-top: 15px;
@@ -170,16 +173,19 @@
       </div>
     </div>
 
-    <div id="flipbook-display-area">
+    <div id="flipbook-container">
       <div id="flipbook-wrapper">
+        <div id="flipbook"></div>
+
+        <!-- Navigation Buttons -->
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
         </button>
-        <div id="flipbook"></div>
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
       </div>
+
 
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
