@@ -8,7 +8,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
     :root {
-      --flipbook-max-width: 760px;
       --flipbook-aspect-ratio: 500 / 760;
     }
 
@@ -53,17 +52,16 @@
 
     #flipbook-container {
       flex-grow: 1;
-      max-width: calc(100vw - 80px - 240px); /* 40px padding each side + logo space */
       box-sizing: border-box;
-      position: relative; /* for absolute buttons */
+      position: relative;
+      width: 100%;
     }
 
     #flipbook-wrapper {
       width: 100%;
-      max-width: var(--flipbook-max-width);
-      margin: 0 auto;
+      aspect-ratio: 760 / 500;
       position: relative;
-      /* height will be set dynamically */
+      margin: 0 auto;
     }
 
     #flipbook {
@@ -122,7 +120,6 @@
 
     #page-scrollbar-container {
       width: 100%;
-      max-width: var(--flipbook-max-width);
       margin: 10px auto 0;
       text-align: center;
       position: relative;
@@ -132,6 +129,7 @@
 
     #page-scrollbar {
       width: 100%;
+      max-width: 100%;
     }
 
     #tooltip {
@@ -163,10 +161,6 @@
         margin-right: 0;
         margin-bottom: 20px;
       }
-
-      #flipbook-container {
-        max-width: calc(100vw - 80px);
-      }
     }
   </style>
 </head>
@@ -183,10 +177,7 @@
       <div class="caption">
         <b>TIMOTHY EDWARDS</b> Middle School<br /><br />
         <div class="address">
-          <i>
-            100 Arnold Way<br />
-            South Windsor, CT 06074
-          </i>
+          <i>100 Arnold Way<br />South Windsor, CT 06074</i>
         </div>
       </div>
     </div>
@@ -195,7 +186,6 @@
     <div id="flipbook-container">
       <div id="flipbook-wrapper">
         <div id="flipbook"></div>
-
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous" />
         </button>
@@ -219,15 +209,15 @@
 
   <script>
     $(document).ready(function () {
-      let $flipbook = $("#flipbook");
+      const $flipbook = $("#flipbook");
       const $scrollbar = $("#page-scrollbar");
       const $scrollbarContainer = $("#page-scrollbar-container");
       const $prev = $("#prev-btn");
       const $next = $("#next-btn");
       const $loader = $("#loader");
+
       const totalPages = 158;
 
-      // Append pages once
       for (let i = 1; i <= totalPages; i++) {
         $flipbook.append(
           '<div class="page"><img src="pages/Page_' +
@@ -236,44 +226,20 @@
         );
       }
 
-      // Calculate flipbook size based on window width minus logo+margin+padding
       function getFlipbookSize() {
-        const windowWidth = $(window).width();
-
-        // Fixed sizes: logo(180) + margin(60) + padding left/right(40*2=80)
-        const sideOccupied = 180 + 60 + 80;
-
-        // Available width for flipbook
-        let availableWidth = windowWidth - sideOccupied;
-
-        // Limit max width to 760px
-        if (availableWidth > 760) availableWidth = 760;
-
-        // Calculate height keeping aspect ratio 760:500
-        const height = Math.round((availableWidth * 500) / 760);
-
-        return { width: Math.round(availableWidth), height: height };
+        const wrapper = $("#flipbook-wrapper")[0];
+        return {
+          width: wrapper.clientWidth,
+          height: wrapper.clientHeight
+        };
       }
 
       function initFlipbook() {
-        // If already initialized, destroy to re-init on resize
-        if ($flipbook.data("turn")) {
-          $flipbook.turn("destroy");
-          $flipbook.empty();
-          // Re-append pages
-          for (let i = 1; i <= totalPages; i++) {
-            $flipbook.append(
-              '<div class="page"><img src="pages/Page_' +
-                i +
-                '.png" width="100%" height="100%"></div>'
-            );
-          }
-        }
-
         const size = getFlipbookSize();
 
-        // Set wrapper height explicitly to keep layout correct
-        $("#flipbook-wrapper").css("height", size.height + "px");
+        if ($flipbook.data("turn")) {
+          $flipbook.turn("destroy");
+        }
 
         $flipbook.turn({
           width: size.width,
@@ -295,17 +261,14 @@
 
         $flipbook.show();
         $loader.hide();
+        $scrollbar.attr("max", totalPages);
         $scrollbarContainer.css("visibility", "visible").show();
         $prev.show();
         $next.show();
-
-        $scrollbar.attr("max", totalPages);
       }
 
-      // Init flipbook on page load
       initFlipbook();
 
-      // Debounced resize handling
       let resizeTimer;
       $(window).on("resize", function () {
         clearTimeout(resizeTimer);
@@ -314,16 +277,15 @@
         }, 300);
       });
 
-      // Scrollbar input
       $scrollbar.on("input", function () {
         const page = parseInt($(this).val());
         $flipbook.turn("page", page);
       });
 
-      // Prev/Next buttons
       $prev.on("click", function () {
         $flipbook.turn("previous");
       });
+
       $next.on("click", function () {
         $flipbook.turn("next");
       });
