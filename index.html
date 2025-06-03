@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>2Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -23,7 +23,7 @@
 
     #logo-caption {
       width: 180px;
-      margin-right: 85px; /* updated from 100px to 85px */
+      margin-right: 85px;
       flex-shrink: 0;
     }
 
@@ -60,7 +60,7 @@
     }
 
     #flipbook {
-      flex-grow: 1;
+      width: 100%;
       height: 100%;
       display: none;
       background: transparent;
@@ -100,7 +100,7 @@
     }
 
     #page-scrollbar-container {
-      width: calc(95% - 100px); /* aligns with flipbook inside button wrapper */
+      width: calc(95% - 100px);
       margin-top: 15px;
       display: none;
       visibility: hidden;
@@ -161,7 +161,6 @@
   </div>
 
   <div id="main-layout">
-    <!-- Logo + caption -->
     <div id="logo-caption">
       <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
       <div class="caption">
@@ -172,7 +171,6 @@
       </div>
     </div>
 
-    <!-- Flipbook & controls -->
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
         <button id="prev-btn" class="nav-button">
@@ -184,7 +182,6 @@
         </button>
       </div>
 
-      <!-- Scrollbar below flipbook, aligned with its width -->
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
       </div>
@@ -212,9 +209,12 @@
         $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
       }
 
+      const wrapperWidth = $flipbook.parent().width();
+      const wrapperHeight = $flipbook.parent().height();
+
       $flipbook.turn({
-        width: $flipbook.width(),
-        height: $flipbook.height(),
+        width: wrapperWidth,
+        height: wrapperHeight,
         autoCenter: true,
         elevation: 50,
         gradients: true,
