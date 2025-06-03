@@ -65,23 +65,19 @@
       position: relative;
     }
     
- 
-
-    #flipbook {
-        width: 760px;
-        height: 500px;
-        position: relative;
-        z-index: 10;
-        display: none;
-        touch-action: manipulation;
-        pointer-events: auto;
-        border: 4px solid lightgray;
-        border-radius: 3px;
-        background: white;
-        box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      }
-
-
+     #flipbook {
+      width: 760px;
+      height: 500px;
+      position: relative;
+      z-index: 10;
+      display: none;
+      touch-action: manipulation;
+      pointer-events: auto;
+      border: none; /* ❌ No visible border */
+      border-radius: 6px; /* Optional: soft corners */
+      background: transparent; /* Let page edges show naturally */
+      box-shadow: 0 0 8px rgba(0,0,0,0.08); /* Subtle depth to look like pages */
+    }
 
     .page {
       width: 380px;
