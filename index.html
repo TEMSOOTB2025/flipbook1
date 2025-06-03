@@ -18,40 +18,45 @@
 
     #main-layout {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       padding: 20px;
     }
 
-    #logo-container {
-      background: #89CFF0;
+    #logo {
+      margin-right: 20px;
+      background-color: #89CFF0;
+      padding: 10px;
       text-align: center;
-      padding: 10px 20px;
+      display: inline-block;
     }
 
     .top-left-image {
-      width: 130px;
+      width: 130px; /* 30% increase from 100px */
       height: auto;
       object-fit: contain;
+      display: block;
+      margin: 0 auto;
     }
 
-    .school-info {
-      margin-top: 8px;
-      font-size: 16px;
-      color: #003366;
+    #logo-caption {
+      font-size: 14px;
+      color: #000;
+      margin-top: 5px;
+      line-height: 1.4;
     }
 
     #flipbook-wrapper {
-      margin-top: 20px;
+      flex: 1;
       display: flex;
-      justify-content: center;
-      width: 100%;
+      flex-direction: column;
+      align-items: center;
     }
 
     #flipbook-container {
       width: 760px;
       position: relative;
       z-index: 10;
+      margin: 0;
     }
 
     #flipbook {
@@ -153,11 +158,12 @@
 <body>
 
   <div id="main-layout">
-    <div id="logo-container">
+    <div id="logo">
       <img src="TEMSLogo.png" alt="TEMS Logo" class="top-left-image">
-      <div class="school-info">
+      <div id="logo-caption">
         Timothy Edwards Middle School<br>
-        100 Arnold Way, South Windsor, Connecticut
+        100 Arnold Way<br>
+        South Windsor, Connecticut
       </div>
     </div>
 
@@ -173,16 +179,16 @@
           <img src="next-arrow.png" alt="Next">
         </button>
       </div>
+
+      <div id="page-scrollbar-container">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+      </div>
     </div>
   </div>
 
   <div id="loader">
     <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
     <p>Loading flipbook, please wait...</p>
-  </div>
-
-  <div id="page-scrollbar-container">
-    <input type="range" id="page-scrollbar" min="1" max="1" value="1">
   </div>
 
   <div id="tooltip"></div>
