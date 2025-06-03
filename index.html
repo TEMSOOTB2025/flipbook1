@@ -1,12 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
-    /* [Your original CSS remains unchanged] */
     body {
       margin: 0;
       font-family: sans-serif;
@@ -176,7 +176,7 @@
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
         </button>
-        <div id="flipbook"></div>
+        <div id="flipbook" style="display: none;"></div>
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
@@ -211,6 +211,9 @@
         $flipbook.append('<div class="page" data-page="' + i + '"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
       }
 
+      // Show flipbook before initializing turn.js
+      $flipbook.css("display", "block");
+
       // Function to load a page if not already loaded
       function loadPage(page) {
         if ($flipbook.find('[data-page="' + page + '"]').length === 0) {
@@ -219,9 +222,7 @@
         }
       }
 
-      // Show flipbook first, then initialize after layout is ready
-      $flipbook.show();
-
+      // Delay initialization to ensure layout is stable
       setTimeout(() => {
         $flipbook.turn({
           width: $flipbook.width(),
@@ -247,13 +248,13 @@
           }
         });
 
-        $flipbook.turn("resize"); // Ensure correct sizing
+        $flipbook.turn("resize");
         $loader.hide();
         $scrollbar.attr("max", totalPages);
         $scrollbarContainer.css("visibility", "visible").show();
         $prev.show();
         $next.show();
-      }, 100); // Delay to ensure layout is ready
+      }, 100); // Delay ensures layout is ready
     });
   </script>
 </body>
