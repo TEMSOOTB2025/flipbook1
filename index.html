@@ -6,10 +6,6 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
-    :root {
-      --aspect-ratio: 760 / 465;
-    }
-
     body {
       margin: 0;
       font-family: sans-serif;
@@ -27,14 +23,13 @@
 
     #logo-caption {
       width: 180px;
-      margin-right: 100px; /* 100px space between logo and flipbook */
+      margin-right: 100px;
       flex-shrink: 0;
     }
 
     #logo-caption img {
       width: 100%;
       height: auto;
-      display: block;
     }
 
     #logo-caption .caption {
@@ -50,13 +45,13 @@
     #flipbook-display-area {
       flex-grow: 1;
       display: flex;
-      justify-content: center;
-      box-sizing: border-box;
+      flex-direction: column;
+      align-items: center;
     }
 
     #flipbook-wrapper {
       width: 80%;
-      aspect-ratio: 760 / 465;
+      aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
       justify-content: center;
@@ -68,11 +63,8 @@
       height: 100%;
       display: none;
       position: relative;
-      z-index: 10;
-      border-radius: 6px;
       background: transparent;
       touch-action: manipulation;
-      pointer-events: auto;
     }
 
     .page {
@@ -89,7 +81,6 @@
       background: gray;
       border: none;
       cursor: pointer;
-      z-index: 1000;
       border-radius: 8px;
       padding: 5px;
       display: none;
@@ -106,9 +97,7 @@
 
     .nav-button img {
       height: 40px;
-      width: auto;
       opacity: 0.8;
-      transition: opacity 0.3s;
     }
 
     .nav-button img:hover {
@@ -117,8 +106,7 @@
 
     #page-scrollbar-container {
       width: 80%;
-      margin: 10px auto 0;
-      text-align: center;
+      margin-top: 15px;
       display: none;
       visibility: hidden;
     }
@@ -157,10 +145,6 @@
         margin-bottom: 20px;
       }
 
-      #flipbook-display-area {
-        width: 100%;
-      }
-
       #flipbook-wrapper {
         width: 90%;
       }
@@ -182,19 +166,18 @@
   </div>
 
   <div id="main-layout">
-    <!-- Logo -->
+    <!-- Logo + caption -->
     <div id="logo-caption">
       <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
       <div class="caption">
         <b>TIMOTHY EDWARDS</b> Middle School<br><br>
         <div class="address">
-          <i>100 Arnold Way<br>
-          South Windsor, CT 06074</i>
+          <i>100 Arnold Way<br>South Windsor, CT 06074</i>
         </div>
       </div>
     </div>
 
-    <!-- Flipbook and controls -->
+    <!-- Flipbook & controls -->
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
         <div id="flipbook"></div>
@@ -205,22 +188,22 @@
           <img src="next-arrow.png" alt="Next">
         </button>
       </div>
-    </div>
-  </div>
 
-  <div id="page-scrollbar-container">
-    <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+      <!-- Scrollbar below flipbook, aligned with its width -->
+      <div id="page-scrollbar-container">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+      </div>
+    </div>
   </div>
 
   <div id="tooltip"></div>
 
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
 
   <script>
-    $(document).ready(function () {
+    $(function () {
       const $flipbook = $("#flipbook");
       const $scrollbar = $("#page-scrollbar");
       const $scrollbarContainer = $("#page-scrollbar-container");
@@ -254,8 +237,7 @@
 
       $scrollbar.attr("max", totalPages);
       $scrollbar.on("input", function () {
-        const page = parseInt($(this).val());
-        $flipbook.turn("page", page);
+        $flipbook.turn("page", parseInt($(this).val()));
       });
 
       $prev.on("click", function () {
