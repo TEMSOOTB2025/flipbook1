@@ -27,11 +27,12 @@
 
    
     
-    #logo-caption {
-                width: 180px;
-                margin-left: 0;          /* Move to natural left alignment */
-                margin-right: 60px;      /* Manually add space between logo and flipbook */
-    }
+#logo-caption {
+  width: 180px;
+  margin-left: -40px; /* Move logo 40px further left */
+  margin-right: 60px; /* Keep space between logo and flipbook */
+  flex-shrink: 0;
+}
 
     #logo-caption img {
       width: 100%;
@@ -64,6 +65,8 @@
       position: relative;
     }
     
+ 
+
     #flipbook {
         width: 760px;
         height: 500px;
@@ -72,10 +75,12 @@
         display: none;
         touch-action: manipulation;
         pointer-events: auto;
-        border: 4px solid #444; /* ✅ Add this line for a dark gray border */
-        border-radius: 8px;      /* Optional: rounded corners */
-        box-shadow: 0 0 12px rgba(0,0,0,0.2); /* Optional: soft outer shadow */
+        border: 4px solid lightgray;
+        border-radius: 3px;
+        background: white;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
       }
+
 
 
     .page {
