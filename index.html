@@ -14,20 +14,23 @@
       overflow-x: hidden;
     }
 
-    #main-layout {
+#main-layout {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 80px 15px;
+      padding: 45px 15px;
+      flex-wrap: wrap;
       max-width: 100vw;
       box-sizing: border-box;
     }
 
+
+   
+    
     #logo-caption {
-      width: 180px;
-      margin-right: 60px; /* EXACT 15px gap between logo and flipbook */
-      text-align: center;
-      flex-shrink: 0;
+                width: 180px;
+                margin-left: 0;          /* Move to natural left alignment */
+                margin-right: 60px;      /* Manually add space between logo and flipbook */
     }
 
     #logo-caption img {
@@ -60,16 +63,20 @@
       height: 500px;
       position: relative;
     }
-
+    
     #flipbook {
-      width: 760px;
-      height: 500px;
-      position: relative;
-      z-index: 10;
-      display: none;
-      touch-action: manipulation;
-      pointer-events: auto;
-    }
+        width: 760px;
+        height: 500px;
+        position: relative;
+        z-index: 10;
+        display: none;
+        touch-action: manipulation;
+        pointer-events: auto;
+        border: 4px solid #444; /* ✅ Add this line for a dark gray border */
+        border-radius: 8px;      /* Optional: rounded corners */
+        box-shadow: 0 0 12px rgba(0,0,0,0.2); /* Optional: soft outer shadow */
+      }
+
 
     .page {
       width: 380px;
