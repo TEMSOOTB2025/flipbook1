@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -216,8 +216,8 @@
     async function loadImagePages() {
       for (let i = 1; i <= totalPages; i++) {
         const img = document.createElement('img');
-        img.src = pages/Page_${i}.png;
-        img.alt = Page ${i};
+        img.src = `pages/Page_${i}.png`;
+        img.alt = `Page ${i}`;
 
         const pageDiv = $('<div class="page">').append(img);
         pageDiv.attr('data-page-number', i);
@@ -288,7 +288,7 @@
         const logicalPage = estimatedPage - 3;
         const left = logicalPage % 2 === 0 ? logicalPage - 1 : logicalPage;
         const right = left + 1;
-        label = Pages ${left}–${right};
+        label = `Pages ${left}–${right}`;
       }
 
       tooltip.style.left = (e.pageX - 20) + "px";
