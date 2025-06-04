@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,8 +51,7 @@
     }
 
     #flipbook-wrapper {
-     
-	 width: 100%;
+      width: 100%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
@@ -78,16 +78,15 @@
     }
 
     .nav-button {
-      align-self: flex-end;
       background: #7b6d8d;
       border: none;
       cursor: pointer;
       border-radius: 8px;
       padding: 5px;
       display: none;
-      margin-bottom: 0;
       height: 50px;
       width: 50px;
+      position: absolute;
     }
 
     .nav-button img {
@@ -112,6 +111,18 @@
     }
 
     #tooltip {
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      pointer-events: none;
+      z-index: 1001;
+    }
+
+    #scrollbar-tooltip {
       position: absolute;
       background: #333;
       color: white;
@@ -174,12 +185,18 @@
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-        <button id="prev-btn" class="nav-button">
+        <button id="prev-btn" class="nav-button" style="bottom: 65px; left: 0;">
           <img src="previous-arrow.png" alt="Previous">
         </button>
+        <button id="first-page-btn" class="nav-button" style="bottom: 0; left: 0;">
+          <img src="First.png" alt="First Page">
+        </button>
         <div id="flipbook"></div>
-        <button id="next-btn" class="nav-button">
+        <button id="next-btn" class="nav-button" style="bottom: 65px; right: 0;">
           <img src="next-arrow.png" alt="Next">
+        </button>
+        <button id="last-page-btn" class="nav-button" style="bottom: 0; right: 0;">
+          <img src="Last.png" alt="Last Page">
         </button>
       </div>
 
@@ -190,12 +207,22 @@
   </div>
 
   <div id="tooltip"></div>
+  <div id="scrollbar-tooltip"></div>
 
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
   </audio>
 
   <script>
+    function getPageLabel(page, totalPages) {
+      if (page === 1) return "Front Cover";
+      if (page === 2 || page === 3) return "Introduction";
+      if (page === totalPages) return "Back Cover";
+      const left = page % 2 === 0 ? page : page - 1;
+      const right = left + 1;
+      return `Page ${left}-${right}`;
+    }
+
     $(function () {
       const $flipbook = $("#flipbook");
       const $scrollbar = $("#page-scrollbar");
@@ -218,7 +245,7 @@
 
       const wrapperWidth = $flipbook.width();
       const wrapperHeight = $flipbook.height();
-           $flipbook.turn({
+      $flipbook.turn({
         width: wrapperWidth,
         height: wrapperHeight,
         autoCenter: true,
@@ -229,26 +256,39 @@
           turning: function (event, page) {
             $("#page-turn-audio")[0].play();
             $scrollbar.val(page);
-                       for (let i = page - 1; i <= page + 1; i++) {
+            for (let i = page - 1; i <= page + 1; i++) {
               if (i >= 1 && i <= totalPages) {
                 loadPage(i);
               }
             }
           },
-     
         }
       });
 
       for (let i = 1; i <= initialPages; i++) {
-
         loadPage(i);
-	
       }
 
       $scrollbar.attr("max", totalPages);
-      $scrollbar.on("input", function () {
+      $scrollbar.on("input", function (e) {
         const page = parseInt($(this).val());
+        const label = getPageLabel(page, totalPages);
+        const tooltip = $("#scrollbar-tooltip");
+
+        const offset = $(this).offset();
+        const width = $(this).width();
+        const percent = (page - 1) / (totalPages - 1);
+        const left = offset.left + percent * width;
+
+        tooltip.text(label)
+               .css({ top: offset.top - 30, left: left - 20 })
+               .show();
+
         $flipbook.turn("page", page);
+      });
+
+      $scrollbar.on("mouseleave", function () {
+        $("#scrollbar-tooltip").hide();
       });
 
       $prev.on("click", function () {
@@ -256,15 +296,24 @@
       });
 
       $next.on("click", function () {
-	        $flipbook.turn("next");
+        $flipbook.turn("next");
+      });
+
+      $("#first-page-btn").on("click", function () {
+        $flipbook.turn("page", 1);
+      });
+
+      $("#last-page-btn").on("click", function () {
+        $flipbook.turn("page", totalPages);
       });
 
       $flipbook.show();
-      
       $loader.hide();
       $scrollbarContainer.css("visibility", "visible").show();
       $prev.show();
       $next.show();
+      $("#first-page-btn").show();
+      $("#last-page-btn").show();
     });
   </script>
 </body>
