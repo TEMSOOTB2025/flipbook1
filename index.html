@@ -51,7 +51,7 @@
     }
 
     #flipbook-wrapper {
-      width: 100%;
+      width: 85%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
@@ -67,6 +67,8 @@
       background: solid;
       touch-action: manipulation;
       position: relative;
+      justify-content: center;
+
     }
 
     .page {
@@ -74,8 +76,37 @@
       height: 100%;
       background: white;
       overflow: hidden;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
     }
+ .tooltip-wrapper {
+      position: absolute;
+      display: inline-block;
+    }
+
+    .custom-tooltip {
+      visibility: hidden;
+      background-color: #f3e8ff;
+      color: #333;
+      text-align: top;
+      border-radius: 4px;
+      padding: 5px 8px;
+      position: absolute;
+      z-index: 1002;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+      font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .tooltip-wrapper:hover .custom-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
 
     .nav-button {
       background: transparent;
@@ -99,8 +130,8 @@
     }
 
     #page-scrollbar-container {
-      width: calc(100% - 100px);
-      margin-top: 15px;
+      width: calc(73%);
+      margin-top: 1.8%;
       display: none;
       visibility: hidden;
     }
@@ -130,7 +161,7 @@
       border-radius: 4px;
       display: none;
       pointer-events: none;
-      z-index: 1001;
+     
     }
 
     #loader {
@@ -184,20 +215,38 @@
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-        <button id="prev-btn" class="nav-button" style="bottom: 65px; left: 0;" title="Previous">
-          <img src="previous-arrow.png" alt="Previous">
-        </button>
-        <button id="first-page-btn" class="nav-button" style="bottom: 0; left: 0;" title="Go to Front Cover">
-          <img src="first.png" alt="First Page">
-        </button>
+          <div class="tooltip-wrapper" style="bottom: 30%; left: 0; right:">
+          <button id="prev-btn" class="nav-button">
+            <img src="previous-arrow.png" alt="Previous">
+          </button>
+          <div class="custom-tooltip">Previous Page</div>
+        </div>
+
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+          <button id="first-page-btn" class="nav-button">
+            <img src="First.png" alt="First Page">
+          </button>
+          <div class="custom-tooltip">First Page</div>
+        </div>
+
         <div id="flipbook"></div>
-        <button id="next-btn" class="nav-button" style="bottom: 65px; right: 0; title="Next"">
-          <img src="next-arrow.png" alt="Next">
-        </button>
-        <button id="last-page-btn" class="nav-button" style="bottom: 0; right: 0;" title="Go to Back Cover ">
-          <img src="last.png" alt="Last Page">
-        </button>
+
+        <div class="tooltip-wrapper" style="bottom: 30%; right: 7.25%;">
+          <button id="next-btn" class="nav-button">
+            <img src="next-arrow.png" alt="Next">
+          </button>
+          <div class="custom-tooltip">Next Page</div>
+        </div>
+
+        <div class="tooltip-wrapper" style="bottom: 20%; right: 7.25%;">
+          <button id="last-page-btn" class="nav-button">
+            <img src="Last.png" alt="Last Page">
+          </button>
+          <div class="custom-tooltip">Last Page</div>
+        </div>
       </div>
+	
+
 
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
