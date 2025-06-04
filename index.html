@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,13 +18,12 @@
     #main-layout {
       display: flex;
       align-items: flex-start;
-      padding: 20px 40px;
-      box-sizing: border-box;
+   
     }
 
     #logo-caption {
       width: 180px;
-      margin-right: 65px;
+      margin-right: 60px;
       flex-shrink: 0;
     }
 
@@ -50,7 +50,7 @@
     }
 
     #flipbook-wrapper {
-      width: 90%;
+      width: 85%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
@@ -60,7 +60,7 @@
     }
 
     #flipbook {
-      width: 100%;
+      flex-grow: 1;
       height: 100%;
       display: none;
       background: transparent;
@@ -68,20 +68,22 @@
       position: relative;
     }
 
-    .page {
-      width: 50%;
-      height: 100%;
-      background: white;
-      overflow: hidden;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
-    }
+
+.page {
+  width: 50%;
+  height: 100%;
+  background: blue;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
+  border: 2px solid black; /* Add this line */
+}
 
     .nav-button {
       align-self: flex-end;
-      background: #7b6d8d;
+      background: 	#593f62;
       border: none;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 4px;
       padding: 5px;
       display: none;
       margin-bottom: 0;
@@ -100,14 +102,14 @@
     }
 
     #page-scrollbar-container {
-      width: calc(90% - 100px);
+      width: calc(85% - 100px);
       margin-top: 15px;
       display: none;
       visibility: hidden;
     }
 
     #page-scrollbar {
-      width: 100%;
+      width: 98%;
     }
 
     #tooltip {
@@ -141,11 +143,11 @@
       }
 
       #flipbook-wrapper {
-        width: 90%;
+        width: 85%;
       }
 
       #page-scrollbar-container {
-        width: 90%;
+        width: 85%;
       }
 
       #prev-btn, #next-btn {
@@ -204,68 +206,54 @@
       const $loader = $("#loader");
 
       const totalPages = 158;
-      const initialPages = 10;
-      const loadedPages = new Set();
 
-      function loadPage(i) {
-        if (!loadedPages.has(i)) {
-          const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
-          $flipbook.turn("addPage", $page, i);
-          loadedPages.add(i);
-        }
+      for (let i = 1; i <= totalPages; i++) {
+        $flipbook.append('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
       }
 
-      const wrapperWidth = $flipbook.parent().width();
-      const wrapperHeight = $flipbook.parent().height();
+      function initializeFlipbook() {
+        const width = $flipbook.parent().width();
+        const height = $flipbook.parent().height();
 
-      $flipbook.turn({
-        width: wrapperWidth,
-        height: wrapperHeight,
-        autoCenter: true,
-        elevation: 50,
-        gradients: true,
-        pages: totalPages,
-        when: {
-          turning: function (event, page) {
-            $("#page-turn-audio")[0].play();
-            $scrollbar.val(page);
-
-            for (let i = page - 1; i <= page + 1; i++) {
-              if (i >= 1 && i <= totalPages) {
-                loadPage(i);
-              }
+        $flipbook.turn({
+          width: width,
+          height: height,
+          autoCenter: true,
+          elevation: 50,
+          gradients: true,
+          when: {
+            turning: function (event, page) {
+              $("#page-turn-audio")[0].play();
+              $scrollbar.val(page);
+            },
+            turned: function (event, page) {
+              $prev.prop("disabled", page === 1);
+              $next.prop("disabled", page === totalPages);
             }
-          },
-          turned: function (event, page) {
-            $prev.toggle(page > 1);
-            $next.toggle(page < totalPages);
           }
-        }
-      });
+        });
 
-      for (let i = 1; i <= initialPages; i++) {
-        loadPage(i);
+        $flipbook.show();
+        $loader.hide();
+        $scrollbarContainer.css("visibility", "visible").show();
+        $prev.show();
+        $next.show();
       }
+
+      // Wait until the flipbook is visible and layout is stable
+      setTimeout(initializeFlipbook, 100);
 
       $scrollbar.attr("max", totalPages);
       $scrollbar.on("input", function () {
-        const page = parseInt($(this).val());
-        $flipbook.turn("page", page);
+        $flipbook.turn("page", parseInt($(this).val()));
       });
 
       $prev.on("click", function () {
-        $flipbook.turn("previous");
+	        $flipbook.turn("previous");
       });
-
       $next.on("click", function () {
         $flipbook.turn("next");
       });
-
-      $flipbook.show();
-      $loader.hide();
-      $scrollbarContainer.css("visibility", "visible").show();
-      $prev.show();
-      $next.show();
     });
   </script>
 </body>
