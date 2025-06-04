@@ -18,13 +18,17 @@
     #main-layout {
       display: flex;
       align-items: flex-start;
-      padding: 20px 40px;
+      
       box-sizing: border-box;
     }
 
     #logo-caption {
       width: 180px;
-      margin-right: 65px;
+      margin-right: 1%px;
+     margin-left: 2%;
+margin-top: 2%;
+
+
       flex-shrink: 0;
     }
 
@@ -44,24 +48,27 @@
     }
 
     #flipbook-display-area {
+	margin-top: 2%;
+
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
+
     }
 
     #flipbook-wrapper {
-      width: 85%;
+      width: 83%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      gap: 20px;
+     
     }
 
     #flipbook {
-      width: 85%;
+      width: 83%;
       height: 100%;
       display: none;
       background: solid;
@@ -130,7 +137,7 @@
     }
 
     #page-scrollbar-container {
-      width: calc(73%);
+      width: calc(70%);
       margin-top: 1.8%;
       display: none;
       visibility: hidden;
@@ -215,14 +222,14 @@
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-          <div class="tooltip-wrapper" style="bottom: 30%; left: 0; right:">
+          <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
           <button id="prev-btn" class="nav-button">
             <img src="previous-arrow.png" alt="Previous">
           </button>
           <div class="custom-tooltip">Previous Page</div>
         </div>
 
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;" >
           <button id="first-page-btn" class="nav-button">
             <img src="first.png" alt="First Page">
           </button>
