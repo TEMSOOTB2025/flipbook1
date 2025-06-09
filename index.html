@@ -297,13 +297,14 @@ margin-top: 2%;
         if (i === 23) {
           const $page = $('<div class="page" id="page-23"><div id="page-23-container" style="width:100%;height:100%;overflow:auto;">Loading Page 23...</div></div>');
           $flipbook.turn("addPage", $page, i);
+		alert(i);
           loadedPages.add(i);
 
           $.ajax({
             url: page23Url,
             success: function (data) {
               $('#page-23-container').html(data);
-		    alert(data);
+		  
             },
             error: function () {
               $('#page-23-container').html('<div style="color: red; padding: 10px;">Failed to load page 23.</div>');
