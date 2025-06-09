@@ -205,8 +205,9 @@
     #page23-link {
       display: none;
       position: absolute;
-      z-index: 1003;
-      background: rgba(255,255,255,0.9);
+      z-index: 9999;
+     
+      background: #FF0000;
       padding: 6px 10px;
       font-size: 14px;
       border-radius: 4px;
@@ -424,7 +425,7 @@
   // compute flipbook width and link width
   const fbWidth = $flipbook.width();
   const linkWidth = $("#page23-link").outerWidth(true);
-
+alert(linkWidth;
   $("#page23-link").css({
     top:    offset.top + 5 + "px",
     left:   offset.left + fbWidth - linkWidth - 10 + "px",
