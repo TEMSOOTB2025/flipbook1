@@ -288,7 +288,7 @@
     href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
     target="_blank"
   >
-    🔗 View related file
+ 
   </a>
 
   <script>
@@ -346,6 +346,7 @@
             // Hide the Page 23 link if we're not on Page 23
             if (page !== 23) {
               $("#page23-link").hide();
+           
             }
           }
         }
@@ -420,16 +421,19 @@
         const threshold = height * 0.2;
 
         if (y <= threshold) {
-          // Position the link near the top-left inside the flipbook
-          $("#page23-link").css({
-            top: offset.top + 5 + "px",
-            left: offset.left + 10 + "px",
-            opacity: 1,
-            pointerEvents: "auto"
-          }).show();
-        } else {
-          $("#page23-link").hide();
-        }
+  // compute flipbook width and link width
+  const fbWidth = $flipbook.width();
+  const linkWidth = $("#page23-link").outerWidth(true);
+
+  $("#page23-link").css({
+    top:    offset.top + 5 + "px",
+    left:   offset.left + fbWidth - linkWidth - 10 + "px",
+    opacity: 1,
+    pointerEvents: "auto"
+  }).show();
+} else {
+  $("#page23-link").hide();
+}
       });
 
       // When the mouse leaves the flipbook area, hide the link
