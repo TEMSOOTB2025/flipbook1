@@ -277,23 +277,27 @@ margin-top: 2%;
     <source src="turn.mp3" type="audio/mpeg">
   </audio>
 
-  <script>
-      $(document).ready(function () {
-    $('#flipbook').turn({
-      width: $('#flipbook-wrapper').width(),
-      height: $('#flipbook-wrapper').width() * 10 / 16,
-      autoCenter: true,
-      when: {
-        turned: function (event, page) {
-          if (page === 23) {
-            $('#page23-overlay').show();
-          } else {
-            $('#page23-overlay').hide();
-          }
-        }
+<script>
+  $(document).ready(function () {
+    const $flipbook = $("#flipbook");
+    const $scrollbar = $("#page-scrollbar");
+    const $scrollbarContainer = $("#page-scrollbar-container");
+    const $prev = $("#prev-btn");
+    const $next = $("#next-btn");
+    const $loader = $("#loader");
+
+    const totalPages = 158;
+    const initialPages = 10;
+    const loadedPages = new Set();
+
+    function loadPage(i) {
+      if (!loadedPages.has(i)) {
+        const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
+        $flipbook.turn("addPage", $page, i);
+        loadedPages.add(i);
       }
-    });
-        
+    }
+
     function getPageLabel(page, totalPages) {
       if (page === 1) return "Front Cover";
       if (page === 2 || page === 3) return "Introduction";
@@ -303,98 +307,87 @@ margin-top: 2%;
       return `Page ${left}-${right}`;
     }
 
-    $(function () {
-      const $flipbook = $("#flipbook");
-      const $scrollbar = $("#page-scrollbar");
-      const $scrollbarContainer = $("#page-scrollbar-container");
-      const $prev = $("#prev-btn");
-      const $next = $("#next-btn");
-      const $loader = $("#loader");
+    const wrapperWidth = $("#flipbook-wrapper").width();
+    const wrapperHeight = wrapperWidth * 10 / 16;
 
-      const totalPages = 158;
-      const initialPages = 10;
-      const loadedPages = new Set();
-
-      function loadPage(i) {
-        if (!loadedPages.has(i)) {
-          const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
-          $flipbook.turn("addPage", $page, i);
-          loadedPages.add(i);
-        }
-      }
-
-      const wrapperWidth = $flipbook.width();
-      const wrapperHeight = $flipbook.height();
-      $flipbook.turn({
-        width: wrapperWidth,
-        height: wrapperHeight,
-        autoCenter: true,
-        elevation: 50,
-        gradients: true,
-        pages: totalPages,
-        when: {
-          turning: function (event, page) {
-            $("#page-turn-audio")[0].play();
-            $scrollbar.val(page);
-            for (let i = page - 1; i <= page + 1; i++) {
-              if (i >= 1 && i <= totalPages) {
-                loadPage(i);
-              }
+    $flipbook.turn({
+      width: wrapperWidth,
+      height: wrapperHeight,
+      autoCenter: true,
+      elevation: 50,
+      gradients: true,
+      pages: totalPages,
+      when: {
+        turning: function (event, page) {
+          $("#page-turn-audio")[0].play();
+          $scrollbar.val(page);
+          for (let i = page - 1; i <= page + 1; i++) {
+            if (i >= 1 && i <= totalPages) {
+              loadPage(i);
             }
-          },
+          }
+        },
+        turned: function (event, page) {
+          if (page === 23) {
+            $('#page23-overlay').show();
+          } else {
+            $('#page23-overlay').hide();
+          }
         }
-      });
-
-      for (let i = 1; i <= initialPages; i++) {
-        loadPage(i);
       }
-
-      $scrollbar.attr("max", totalPages);
-      $scrollbar.on("input", function (e) {
-        const page = parseInt($(this).val());
-        const label = getPageLabel(page, totalPages);
-        const tooltip = $("#scrollbar-tooltip");
-
-        const offset = $(this).offset();
-        const width = $(this).width();
-        const percent = (page - 1) / (totalPages - 1);
-        const left = offset.left + percent * width;
-
-        tooltip.text(label)
-               .css({ top: offset.top - 30, left: left - 20 })
-               .show();
-
-        $flipbook.turn("page", page);
-      });
-
-      $scrollbar.on("mouseleave", function () {
-        $("#scrollbar-tooltip").hide();
-      });
-
-      $prev.on("click", function () {
-        $flipbook.turn("previous");
-      });
-
-      $next.on("click", function () {
-        $flipbook.turn("next");
-      });
-
-      $("#first-page-btn").on("click", function () {
-        $flipbook.turn("page", 1);
-      });
-
-      $("#last-page-btn").on("click", function () {
-        $flipbook.turn("page", totalPages);
-      });
-
-      $flipbook.show();
-      $loader.hide();
-      $scrollbarContainer.css("visibility", "visible").show();
-      $prev.show();
-      $next.show();
-      $("#first-page-btn").show();
-      $("#last-page-btn").show();
     });
-  </script>
+
+    for (let i = 1; i <= initialPages; i++) {
+      loadPage(i);
+    }
+
+    $scrollbar.attr("max", totalPages);
+    $scrollbar.on("input", function () {
+      const page = parseInt($(this).val());
+      const label = getPageLabel(page, totalPages);
+      const tooltip = $("#scrollbar-tooltip");
+
+      const offset = $(this).offset();
+      const width = $(this).width();
+      const percent = (page - 1) / (totalPages - 1);
+      const left = offset.left + percent * width;
+
+      tooltip.text(label)
+             .css({ top: offset.top - 30, left: left - 20 })
+             .show();
+
+      $flipbook.turn("page", page);
+    });
+
+    $scrollbar.on("mouseleave", function () {
+      $("#scrollbar-tooltip").hide();
+    });
+
+    $prev.on("click", function () {
+      $flipbook.turn("previous");
+    });
+
+    $next.on("click", function () {
+      $flipbook.turn("next");
+    });
+
+    $("#first-page-btn").on("click", function () {
+      $flipbook.turn("page", 1);
+    });
+
+    $("#last-page-btn").on("click", function () {
+      $flipbook.turn("page", totalPages);
+    });
+
+    $flipbook.show();
+    $loader.hide();
+    $scrollbarContainer.css("visibility", "visible").show();
+    $prev.show();
+    $next.show();
+    $("#first-page-btn").show();
+    $("#last-page-btn").show();
+  });
+</script>
+
 </body>
 </html>
