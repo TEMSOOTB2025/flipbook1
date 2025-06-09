@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>2.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -221,7 +221,7 @@ margin-top: 2%;
   </div>
 
   <div id="flipbook-display-area">
-    <div id="flipbook-wrapper" style="position: relative;"> <!-- Ensure relative positioning -->
+    <div id="flipbook-wrapper"> <!-- Ensure relative positioning -->
       
       <!-- Navigation Buttons -->
       <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
@@ -256,28 +256,11 @@ margin-top: 2%;
       </div>
 
       <!-- Page 23 Overlay -->
-      <div id="page23-overlay" style="
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 20000;
-        pointer-events: none;
-      ">
-        <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
-           style="position: absolute; top: 32%; left: 50%; transform: translateX(-50%);
-                  background-color: rgb(239, 22, 22); color: rgb(234, 234, 238); font-size: 11px;
-                  padding: 4px 8px; border-radius: 4px; z-index: 20001;
-                  text-decoration: none; pointer-events: auto;">
-          Link to Music
-        </a>
-      </div>
+     
 
     </div>
-
-    <!-- Scrollbar -->
+	
+     <!-- Scrollbar -->
     <div id="page-scrollbar-container">
       <input type="range" id="page-scrollbar" min="1" max="1" value="1">
     </div>
@@ -304,13 +287,81 @@ margin-top: 2%;
     const initialPages = 10;
     const loadedPages = new Set();
 
-    function loadPage(i) {
-      if (!loadedPages.has(i)) {
-        const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
-        $flipbook.turn("addPage", $page, i);
-        loadedPages.add(i);
-      }
+function loadPage(i) {
+  if (!loadedPages.has(i)) {
+    let $page;
+
+    if (i === 23) {
+      $page = $(`
+        <div class="page" style="position: relative;">
+          <img src="pages/Page_${i}.png" width="100%" height="100%">
+          <div id="page23-overlay3" style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20000;
+            pointer-events: none;
+          ">
+            <a href="https://drive.google.com/file/d/1ukrzvGwh8u7RrXyfEXSG-AL19t8D9979/view?" target="_blank"
+               style="position: absolute; top: 80%; left: 50%; transform: translateX(-50%);
+                      background-color: white; color: #4682B4; font-size: 10px;
+                      padding: 4px 8px; border-radius: 4px; z-index: 20001;
+                      text-decoration: none; pointer-events: auto;">
+              <u>Link to Music</u>
+            </a>
+          </div>
+	 <div id="page23-overlay" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 20000;
+        pointer-events: none;
+      ">
+        <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
+           style="position: absolute; top: 58%; left: 50%; transform: translateX(-50%);
+                  background-color: white; color: #4682B4; font-size: 10px;
+                  padding: 4px 8px; border-radius: 4px; z-index: 20001;
+                  text-decoration: none; pointer-events: auto;">
+             <u>Link to Music 2</u>
+        </a>
+      </div>
+ <div id="page23-overlay2" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 20000;
+        pointer-events: none;
+      ">
+        <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
+           style="position: absolute; top: 29%; left: 50%; transform: translateX(-50%);
+                  background-color: white; color: #4682B4; font-size: 10px;
+                  padding: 4px 8px; border-radius: 4px; z-index: 20001;
+                  text-decoration: none; pointer-events: auto;">
+              <u>Link to Music</u>
+        </a>
+      </div>
+        </div>
+      `);
+    } else {
+      //alert(i); // Optional: for debugging
+      $page = $(`
+        <div class="page">
+          <img src="pages/Page_${i}.png" width="100%" height="100%">
+        </div>
+      `);
     }
+
+    $flipbook.turn("addPage", $page, i);
+    loadedPages.add(i);
+  }
+}
+
 
     function getPageLabel(page, totalPages) {
       if (page === 1) return "Front Cover";
@@ -342,11 +393,21 @@ margin-top: 2%;
           }
         },
         turned: function (event, page) {
-          if (page === 23) {
-            alert(page);
-            $('#page23-overlay').show();
+	
+          if (page == 22 || page ==23) {
+                //    $('#page23-overlay').show();
+
+const overlay = document.getElementById('page23-overlay');
+if (overlay) {
+//alert(overlay);
+document.getElementById('page23-overlay').show();
+document.getElementById('page23-overlay2').show();
+  overlay.show();
+}
           } else {
-            $('#page23-overlay').hide();
+		//  $('#page23-overlay').hide();
+		//$('#page23-overlay').hide();
+
           }
         }
       }
