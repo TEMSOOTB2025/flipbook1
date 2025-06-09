@@ -251,45 +251,91 @@
     </div>
   </div>
 
-  <!-- ✅ NEW SCRIPT added here -->
-  <script>
-    $(document).ready(function () {
-      const pageCount = 40;
-      const page23Url = "https://yourusername.github.io/your-repo/page23.html"; // Replace this with your actual page23 URL
+<script>
+  $(document).ready(function () {
+    const totalPages = 158;
 
-      // Add blank pages
-      for (let i = 1; i <= pageCount; i++) {
-        $('#flipbook').append(`<div class='page'>Page ${i}</div>`);
-      }
-
-      $('#flipbook').turn({
-        pages: pageCount,
-        autoCenter: true,
-        elevation: 50,
-        gradients: true,
-        when: {
-          turned: function (event, page, view) {
-            if (page === 23 && !$('#flipbook .page23-loaded').length) {
-              try {
-                $.get(page23Url, function (data) {
-                  const $page = $('#flipbook').turn('pageElement', 23);
-                  $page.html(data);
-                  $page.addClass("page23-loaded");
-                }).fail(function () {
-                  const $page = $('#flipbook').turn('pageElement', 23);
-                  $page.html("<p style='padding:10px;'>Failed to load page 23.</p>");
-                });
-              } catch (err) {
-                console.error("Error loading page 23:", err);
-              }
-            }
-          }
+    $('#flipbook').turn({
+      width: $('#flipbook-wrapper').width(),
+      height: $('#flipbook-wrapper').width() / (16 / 10),
+      autoCenter: true,
+      pages: totalPages,
+      when: {
+        turning: function (event, page) {
+          updateScrollbar(page);
+        },
+        turned: function () {
+          $('#loader').hide();
+          $('#flipbook').show();
+          $('.nav-button').fadeIn();
+          $('#page-scrollbar-container').css('visibility', 'visible').fadeIn();
         }
-      });
-
-      $('#flipbook').show();
-      $('#loader').hide();
+      }
     });
-  </script>
+
+    function addPage(pageNumber) {
+      if (pageNumber === 23) {
+        try {
+          const pageEl = $('<div />', {
+            class: 'page',
+            html: `<img src="pages/Page_${pageNumber}.png" style="width:100%; height:100%;">`
+          });
+          $('#flipbook').turn('addPage', pageEl, pageNumber);
+        } catch (error) {
+          console.error(`Error loading Page ${pageNumber}:`, error);
+          const errorPage = $('<div />', {
+            class: 'page',
+            html: `<div style="padding:20px; font-size:18px; color:red;">Page ${pageNumber} failed to load.</div>`
+          });
+          $('#flipbook').turn('addPage', errorPage, pageNumber);
+        }
+      } else {
+        const pageEl = $('<div />', {
+          class: 'page',
+          html: `<img src="pages/Page_${pageNumber}.png" style="width:100%; height:100%;">`
+        });
+        $('#flipbook').turn('addPage', pageEl, pageNumber);
+      }
+    }
+
+    // Lazy load nearby pages
+    $('#flipbook').bind('turning', function (event, page) {
+      for (let offset = -2; offset <= 2; offset++) {
+        const p = page + offset;
+        if (p >= 1 && p <= totalPages && !$('#flipbook').turn('hasPage', p)) {
+          addPage(p);
+        }
+      }
+    });
+
+    // Initial preload
+    for (let i = 1; i <= Math.min(4, totalPages); i++) {
+      addPage(i);
+    }
+
+    $('#next-btn').click(() => $('#flipbook').turn('next'));
+    $('#prev-btn').click(() => $('#flipbook').turn('previous'));
+    $('#first-page-btn').click(() => $('#flipbook').turn('page', 1));
+    $('#last-page-btn').click(() => $('#flipbook').turn('page', totalPages));
+
+    // Scrollbar
+    const scrollbar = $('#page-scrollbar');
+    scrollbar.attr('min', 1).attr('max', totalPages).val(1);
+    scrollbar.on('input', function () {
+      $('#flipbook').turn('page', parseInt(this.value));
+    });
+
+    function updateScrollbar(page) {
+      scrollbar.val(page);
+    }
+
+    // Resize handler
+    $(window).on('resize', function () {
+      $('#flipbook').turn('size', $('#flipbook-wrapper').width(), $('#flipbook-wrapper').width() / (16 / 10));
+    });
+  });
+</script>
+
+
 </body>
 </html>
