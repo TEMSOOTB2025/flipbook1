@@ -204,74 +204,88 @@ margin-top: 2%;
   </style>
 </head>
 <body>
-  <div id="loader">
-    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
-    <p>Loading flipbook, please wait...</p>
-  </div>
-
-  <div id="main-layout">
-    <div id="logo-caption">
-      <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
-      <div class="caption">
-        <b>TIMOTHY EDWARDS</b> Middle School<br><br>
-        <div class="address">
-          <i>100 Arnold Way<br>South Windsor, CT 06074</i>
-        </div>
-      </div>
-    </div>
-
-    <div id="flipbook-display-area">
-      <div id="flipbook-wrapper">
-          <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
-          <button id="prev-btn" class="nav-button">
-            <img src="previous-arrow.png" alt="Previous">
-          </button>
-          <div class="custom-tooltip">Previous Page</div>
-        </div>
-
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;" >
-          <button id="first-page-btn" class="nav-button">
-            <img src="first.png" alt="First Page">
-          </button>
-          <div class="custom-tooltip">First Page</div>
-        </div>
-
-        <div id="flipbook"></div>
-
-        <div class="tooltip-wrapper" style="bottom: 30%; right: 7.25%;">
-          <button id="next-btn" class="nav-button">
-            <img src="next-arrow.png" alt="Next">
-          </button>
-          <div class="custom-tooltip">Next Page</div>
-        </div>
-
-        <div class="tooltip-wrapper" style="bottom: 20%; right: 7.25%;">
-          <button id="last-page-btn" class="nav-button">
-            <img src="last.png" alt="Last Page">
-          </button>
-          <div class="custom-tooltip">Last Page</div>
-        </div>
-      </div>
-	
-
-
-      <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
-      </div>
-    </div>
-  </div>
-
-  <div id="tooltip"></div>
-  <div id="scrollbar-tooltip"></div>
-  <div id="page23-overlay">
-  <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
-     style="position: absolute; top: 32%; left: 50%; transform: translateX(-50%);
-            background-color:rgb(239, 22, 22); color:rgb(234, 234, 238); font-size: 11px;
-            padding: 4px 8px; border-radius: 4px; z-index: 9999;
-            text-decoration: none;">
-    Link to Music
-  </a>
+<div id="loader">
+  <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
+  <p>Loading flipbook, please wait...</p>
 </div>
+
+<div id="main-layout">
+  <div id="logo-caption">
+    <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
+    <div class="caption">
+      <b>TIMOTHY EDWARDS</b> Middle School<br><br>
+      <div class="address">
+        <i>100 Arnold Way<br>South Windsor, CT 06074</i>
+      </div>
+    </div>
+  </div>
+
+  <div id="flipbook-display-area">
+    <div id="flipbook-wrapper" style="position: relative;"> <!-- Ensure relative positioning -->
+      
+      <!-- Navigation Buttons -->
+      <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
+        <button id="prev-btn" class="nav-button">
+          <img src="previous-arrow.png" alt="Previous">
+        </button>
+        <div class="custom-tooltip">Previous Page</div>
+      </div>
+
+      <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+        <button id="first-page-btn" class="nav-button">
+          <img src="first.png" alt="First Page">
+        </button>
+        <div class="custom-tooltip">First Page</div>
+      </div>
+
+      <!-- Flipbook -->
+      <div id="flipbook"></div>
+
+      <div class="tooltip-wrapper" style="bottom: 30%; right: 7.25%;">
+        <button id="next-btn" class="nav-button">
+          <img src="next-arrow.png" alt="Next">
+        </button>
+        <div class="custom-tooltip">Next Page</div>
+      </div>
+
+      <div class="tooltip-wrapper" style="bottom: 20%; right: 7.25%;">
+        <button id="last-page-btn" class="nav-button">
+          <img src="last.png" alt="Last Page">
+        </button>
+        <div class="custom-tooltip">Last Page</div>
+      </div>
+
+      <!-- Page 23 Overlay -->
+      <div id="page23-overlay" style="
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 20000;
+        pointer-events: none;
+      ">
+        <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
+           style="position: absolute; top: 32%; left: 50%; transform: translateX(-50%);
+                  background-color: rgb(239, 22, 22); color: rgb(234, 234, 238); font-size: 11px;
+                  padding: 4px 8px; border-radius: 4px; z-index: 20001;
+                  text-decoration: none; pointer-events: auto;">
+          Link to Music
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Scrollbar -->
+    <div id="page-scrollbar-container">
+      <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+    </div>
+  </div>
+</div>
+
+<div id="tooltip"></div>
+<div id="scrollbar-tooltip"></div>
 
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg">
