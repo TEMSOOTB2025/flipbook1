@@ -22,7 +22,7 @@
 
     #logo-caption {
       width: 180px;
-      margin-right: 1%px;
+      margin-right: 1%;
       margin-left: 2%;
       margin-top: 2%;
       flex-shrink: 0;
@@ -380,6 +380,13 @@
     $('#page-scrollbar').on('mouseleave', function () {
       $('#scrollbar-tooltip').hide();
     });
+
+       $('#flipbook').show(); // Make flipbook visible
+    $('#loader').hide(); // Hide the loader
+    $('.nav-button').show(); // Show nav buttons
+    $('#page-scrollbar-container').css('visibility', 'visible').show(); // Show scrollbar if needed
+  });
+</script>
   });
 </script>
 
