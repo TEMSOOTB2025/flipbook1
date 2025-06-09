@@ -307,8 +307,8 @@ margin-top: 2%;
       return `Page ${left}-${right}`;
     }
 
-    const wrapperWidth = $("#flipbook-wrapper").width();
-    const wrapperHeight = wrapperWidth * 10 / 16;
+     const wrapperWidth = $flipbook.width();
+      const wrapperHeight = $flipbook.height();
 
     $flipbook.turn({
       width: wrapperWidth,
