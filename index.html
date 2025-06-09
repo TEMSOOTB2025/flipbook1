@@ -1,3 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+    }
+
+    #main-layout {
+      display: flex;
+      align-items: flex-start;
+      box-sizing: border-box;
+    }
+
+    #logo-caption {
+      width: 180px;
+      margin-right: 1%px;
+      margin-left: 2%;
+      margin-top: 2%;
+      flex-shrink: 0;
+    }
+
+    #logo-caption img {
+      width: 100%;
+      height: auto;
+    }
+
+    #logo-caption .caption {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    #logo-caption .address {
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    #flipbook-display-area {
+      margin-top: 2%;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #flipbook-wrapper {
+      width: 83%;
+      aspect-ratio: 16 / 10;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    #flipbook {
+      width: 83%;
+      height: 100%;
+      display: none;
+      background: solid;
+      touch-action: manipulation;
+      position: relative;
+      justify-content: center;
+    }
+
+    .page {
+      width: 50%;
+      height: 100%;
+      background: white;
+      overflow: hidden;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
+    }
+    .tooltip-wrapper {
+      position: absolute;
+      display: inline-block;
+    }
+
+    .custom-tooltip {
+      visibility: hidden;
+      background-color: #f3e8ff;
+      color: #333;
+      text-align: top;
+      border-radius: 4px;
+      padding: 5px 8px;
+      position: absolute;
+      z-index: 1002;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+      font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .tooltip-wrapper:hover .custom-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .nav-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      display: none;
+      height: 70px;
+      width: 70px;
+      position: absolute;
+    }
+
+    .nav-button img {
+      height: 100%;
+      width: auto;
+      opacity: 0.8;
+    }
+
+    .nav-button img:hover {
+      opacity: 1;
+    }
+
+    #page-scrollbar-container {
+      width: calc(70%);
+      margin-top: 1.8%;
+      display: none;
+      visibility: hidden;
+    }
+
+    #page-scrollbar {
+      width: 100%;
+    }
+
+    #tooltip {
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      pointer-events: none;
+      z-index: 1001;
+    }
+
+    #scrollbar-tooltip {
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      pointer-events: none;
+    }
+
+    #loader {
+      font-family: Arial;
+      color: white;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    /* Overlay box for page 23 link */
+    #page23-overlay {
+      position: absolute;
+      top: 30%;
+      left: 75%;
+      background-color: red;
+      color: white;
+      font-size: 11px;
+      padding: 5px 8px;
+      border-radius: 3px;
+      z-index: 20000;
+      display: none;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      #main-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #logo-caption {
+        margin-right: 0;
+        margin-bottom: 20px;
+      }
+
+      #flipbook-wrapper {
+        width: 90%;
+      }
+
+      #page-scrollbar-container {
+        width: 90%;
+      }
+
+      #prev-btn, #next-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
+    <p>Loading flipbook, please wait...</p>
+  </div>
+
+  <div id="main-layout">
+    <div id="logo-caption">
+      <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
+      <div class="caption">
+        <b>TIMOTHY EDWARDS</b> Middle School<br><br>
+        <div class="address">
+          <i>100 Arnold Way<br>South Windsor, CT 06074</i>
+        </div>
+      </div>
+    </div>
+
+    <div id="flipbook-display-area">
+      <div id="flipbook-wrapper">
+        <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
+          <button id="prev-btn" class="nav-button">
+            <img src="previous-arrow.png" alt="Previous">
+          </button>
+          <div class="custom-tooltip">Previous Page</div>
+        </div>
+
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+          <button id="first-page-btn" class="nav-button">
+            <img src="first.png" alt="First Page">
+          </button>
+          <div class="custom-tooltip">First Page</div>
+        </div>
+
+        <div id="flipbook"></div>
+
+        <div class="tooltip-wrapper" style="bottom: 30%; right: 7.25%;">
+          <button id="next-btn" class="nav-button">
+            <img src="next-arrow.png" alt="Next">
+          </button>
+          <div class="custom-tooltip">Next Page</div>
+        </div>
+
+        <div class="tooltip-wrapper" style="bottom: 20%; right: 7.25%;">
+          <button id="last-page-btn" class="nav-button">
+            <img src="last.png" alt="Last Page">
+          </button>
+          <div class="custom-tooltip">Last Page</div>
+        </div>
+
+        <!-- Overlay link box for Page 23 -->
+        <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank" id="page23-overlay">Link to music</a>
+      </div>
+
+      <div id="page-scrollbar-container">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+  <div id="scrollbar-tooltip"></div>
+
+  <audio id="page-turn-audio" preload="auto">
+    <source src="turn.mp3" type="audio/mpeg">
+  </audio>
+
 <script>
   const TOTAL_PAGES = 158;
   let loadedPages = {};
@@ -105,3 +382,6 @@
     });
   });
 </script>
+
+</body>
+</html>
