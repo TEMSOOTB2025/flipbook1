@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +6,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
+    /* your full existing CSS stays here — unchanged */
     body {
       margin: 0;
       font-family: sans-serif;
@@ -18,17 +18,14 @@
     #main-layout {
       display: flex;
       align-items: flex-start;
-      
       box-sizing: border-box;
     }
 
     #logo-caption {
       width: 180px;
       margin-right: 1%px;
-     margin-left: 2%;
-margin-top: 2%;
-
-
+      margin-left: 2%;
+      margin-top: 2%;
       flex-shrink: 0;
     }
 
@@ -48,13 +45,11 @@ margin-top: 2%;
     }
 
     #flipbook-display-area {
-	margin-top: 2%;
-
+      margin-top: 2%;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-
     }
 
     #flipbook-wrapper {
@@ -64,7 +59,6 @@ margin-top: 2%;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-     
     }
 
     #flipbook {
@@ -75,7 +69,6 @@ margin-top: 2%;
       touch-action: manipulation;
       position: relative;
       justify-content: center;
-
     }
 
     .page {
@@ -85,7 +78,8 @@ margin-top: 2%;
       overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
     }
- .tooltip-wrapper {
+
+    .tooltip-wrapper {
       position: absolute;
       display: inline-block;
     }
@@ -113,7 +107,6 @@ margin-top: 2%;
       visibility: visible;
       opacity: 1;
     }
-
 
     .nav-button {
       background: transparent;
@@ -168,7 +161,6 @@ margin-top: 2%;
       border-radius: 4px;
       display: none;
       pointer-events: none;
-     
     }
 
     #loader {
@@ -222,14 +214,14 @@ margin-top: 2%;
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-          <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
+        <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
           <button id="prev-btn" class="nav-button">
             <img src="previous-arrow.png" alt="Previous">
           </button>
           <div class="custom-tooltip">Previous Page</div>
         </div>
 
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;" >
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
           <button id="first-page-btn" class="nav-button">
             <img src="first.png" alt="First Page">
           </button>
@@ -252,156 +244,52 @@ margin-top: 2%;
           <div class="custom-tooltip">Last Page</div>
         </div>
       </div>
-	
-
 
       <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+        <input type="range" id="page-scrollbar">
       </div>
     </div>
   </div>
 
-  <div id="tooltip"></div>
-  <div id="scrollbar-tooltip"></div>
-
-  <audio id="page-turn-audio" preload="auto">
-    <source src="turn.mp3" type="audio/mpeg">
-  </audio>
-
+  <!-- ✅ NEW SCRIPT added here -->
   <script>
-    function getPageLabel(page, totalPages) {
-      if (page === 1) return "Front Cover";
-      if (page === 2 || page === 3) return "Introduction";
-      if (page === totalPages) return "Back Cover";
-      const left = page % 2 === 0 ? page : page - 1;
-      const right = left + 1;
-      return `Page ${left}-${right}`;
-    }
+    $(document).ready(function () {
+      const pageCount = 40;
+      const page23Url = "https://yourusername.github.io/your-repo/page23.html"; // Replace this with your actual page23 URL
 
-    $(function () {
-      const $flipbook = $("#flipbook");
-      const $scrollbar = $("#page-scrollbar");
-      const $scrollbarContainer = $("#page-scrollbar-container");
-      const $prev = $("#prev-btn");
-      const $next = $("#next-btn");
-      const $loader = $("#loader");
-
-      const totalPages = 158;
-      const initialPages = 10;
-      const loadedPages = new Set();
-
-      const page23Url = "https://temsootb2025.github.io/OOTBPg23/Pg23.html"; // <-- your custom Page 23 URL
-
-      function loadPage(i) {
-        // --- NEW: Page 23 override start ---
-        if (i === 23) {
-          const $page = $('<div class="page" id="page-23"><div id="page-23-container" style="width:100%;height:100%;overflow:auto;">Loading Page 23...</div></div>');
-          $flipbook.turn("addPage", $page, i);
-	
-          loadedPages.add(i);
-
-          $.ajax({
-            url: page23Url,
-            success: function (data) {
-              $('#page-23-container').html(data);
-		  
-            },
-            error: function () {
-              $('#page-23-container').html('<div style="color: red; padding: 10px;">Failed to load page 23.</div>');
-            }
-          });
-          return;
-        }
-        // --- NEW: Page 23 override end ---
-
-        if (!loadedPages.has(i)) {
-          const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
-          $flipbook.turn("addPage", $page, i);
-          loadedPages.add(i);
-        }
+      // Add blank pages
+      for (let i = 1; i <= pageCount; i++) {
+        $('#flipbook').append(`<div class='page'>Page ${i}</div>`);
       }
 
-      const wrapperWidth = $flipbook.width();
-      const wrapperHeight = $flipbook.height();
-      $flipbook.turn({
-        width: wrapperWidth,
-        height: wrapperHeight,
+      $('#flipbook').turn({
+        pages: pageCount,
         autoCenter: true,
         elevation: 50,
         gradients: true,
-        pages: totalPages,
         when: {
-          turning: function (event, page) {
-            $("#page-turn-audio")[0].play();
-            $scrollbar.val(page);
-            for (let i = page - 1; i <= page + 1; i++) {
-              if (i >= 1 && i <= totalPages) {
-                // Always reload Page 23 content when it's part of the view
-                if (i === 23 && loadedPages.has(i)) {
-			
-                  loadedPages.delete(i);
-			
-                  $('#flipbook').turn('removePage', 23);
-			
-                }
-                loadPage(i);
+          turned: function (event, page, view) {
+            if (page === 23 && !$('#flipbook .page23-loaded').length) {
+              try {
+                $.get(page23Url, function (data) {
+                  const $page = $('#flipbook').turn('pageElement', 23);
+                  $page.html(data);
+                  $page.addClass("page23-loaded");
+                }).fail(function () {
+                  const $page = $('#flipbook').turn('pageElement', 23);
+                  $page.html("<p style='padding:10px;'>Failed to load page 23.</p>");
+                });
+              } catch (err) {
+                console.error("Error loading page 23:", err);
               }
             }
-          },
+          }
         }
       });
 
-      for (let i = 1; i <= initialPages; i++) {
-        loadPage(i);
-      }
-
-      $scrollbar.attr("max", totalPages);
-      $scrollbar.on("input", function (e) {
-        const page = parseInt($(this).val());
-        const label = getPageLabel(page, totalPages);
-        const tooltip = $("#scrollbar-tooltip");
-
-        const offset = $(this).offset();
-        const width = $(this).width();
-        const percent = (page - 1) / (totalPages - 1);
-        const left = offset.left + percent * width;
-
-        tooltip.text(label)
-               .css({ top: offset.top - 30, left: left - 20 })
-               .show();
-
-        $flipbook.turn("page", page);
-      });
-
-      $scrollbar.on("mouseleave", function () {
-        $("#scrollbar-tooltip").hide();
-      });
-
-      $prev.on("click", function () {
-        $flipbook.turn("previous");
-      });
-
-      $next.on("click", function () {
-        $flipbook.turn("next");
-      });
-
-      $("#first-page-btn").on("click", function () {
-        $flipbook.turn("page", 1);
-      });
-
-      $("#last-page-btn").on("click", function () {
-        $flipbook.turn("page", totalPages);
-      });
-
-      $flipbook.show();
-      $loader.hide();
-      $scrollbarContainer.css("visibility", "visible").show();
-      $prev.show();
-      $next.show();
-      $("#first-page-btn").show();
-      $("#last-page-btn").show();
+      $('#flipbook').show();
+      $('#loader').hide();
     });
   </script>
-
 </body>
 </html>
