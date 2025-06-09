@@ -13,14 +13,17 @@
       background-size: cover;
       overflow-x: hidden;
     }
-    /* Layout */
+
     #main-layout { display: flex; align-items: flex-start; box-sizing: border-box; }
+
     #logo-caption {
       width: 180px;
       margin: 2% 1% 0 2%;
       flex-shrink: 0;
     }
+
     #logo-caption img { width: 100%; height: auto; }
+
     #logo-caption .caption { text-align: center; margin-top: 10px; }
     #logo-caption .address { font-size: 13px; line-height: 1.3; }
 
@@ -29,6 +32,7 @@
       display: flex; flex-direction: column;
       align-items: center;
     }
+
     #flipbook-wrapper {
       width: 83%; aspect-ratio: 16/10;
       position: relative;
@@ -36,6 +40,7 @@
       justify-content: center;
       align-items: flex-start;
     }
+
     #flipbook {
       width: 83%; height: 100%;
       display: none;
@@ -44,6 +49,7 @@
       position: relative;
       justify-content: center;
     }
+
     .page {
       width: 50%; height: 100%;
       background: white;
@@ -55,6 +61,7 @@
 
     /* Tooltips */
     .tooltip-wrapper { position: absolute; display: inline-block; }
+
     .custom-tooltip {
       visibility: hidden;
       background-color: #f3e8ff;
@@ -73,12 +80,12 @@
       font-size: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
+
     .tooltip-wrapper:hover .custom-tooltip {
       visibility: visible;
       opacity: 1;
     }
 
-    /* Nav buttons */
     .nav-button {
       background: transparent; border: none;
       cursor: pointer; padding: 5px;
@@ -86,24 +93,27 @@
       height: 70px; width: 70px;
       position: absolute;
     }
+
     .nav-button img {
       height: 100%; width: auto;
       opacity: 0.8;
     }
+
     .nav-button img:hover { opacity: 1; }
 
-    /* Scrollbar and loader */
     #page-scrollbar-container {
       width: 70%; margin-top: 1.8%;
       display: none; visibility: hidden;
     }
+
     #page-scrollbar { width: 100%; }
+
     #loader {
       font-family: Arial; color: white;
       text-align: center; margin-top: 100px;
     }
-    #tooltip,
-    #scrollbar-tooltip {
+
+    #tooltip, #scrollbar-tooltip {
       position: absolute;
       background: #333; color: white;
       padding: 4px 8px;
@@ -113,25 +123,22 @@
       pointer-events: none;
     }
 
-    /* Responsive */
     @media (max-width: 900px) {
       #main-layout { flex-direction: column; align-items: center; }
-      #logo-caption { margin-right: 0; margin-bottom: 20px; }
-      #flipbook-wrapper, #page-scrollbar-container { width: 90%; }
-      #prev-btn, #next-btn { display: none !important; }
     }
 
-    /* Music link overlay */
     #music-link-overlay {
       position: absolute;
       top: 20%;
-      left: 50%;
+      left: 75%;
       transform: translateX(-50%);
       background-color: red;
       padding: 6px 12px;
       border-radius: 4px;
       z-index: 20000;
+      display: none;
     }
+
     #music-link-overlay a {
       color: white;
       text-decoration: none;
@@ -157,14 +164,10 @@
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-        <!-- ➕ Overlay Link -->
         <div id="music-link-overlay">
-          <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank">
-            Link to Music
-          </a>
+          <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank">Link to Music</a>
         </div>
 
-        <!-- Navigation Controls -->
         <div class="tooltip-wrapper" style="bottom:30%; left:0;">
           <button id="prev-btn" class="nav-button"><img src="previous-arrow.png" alt="Previous"></button>
           <div class="custom-tooltip">Previous Page</div>
@@ -174,10 +177,8 @@
           <div class="custom-tooltip">First Page</div>
         </div>
 
-        <!-- Flipbook Container -->
         <div id="flipbook"></div>
 
-        <!-- Navigation Controls Right -->
         <div class="tooltip-wrapper" style="bottom:30%; right:7.25%;">
           <button id="next-btn" class="nav-button"><img src="next-arrow.png" alt="Next"></button>
           <div class="custom-tooltip">Next Page</div>
@@ -189,93 +190,53 @@
       </div>
 
       <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+        <input type="range" id="page-scrollbar" min="1" max="100" value="1">
       </div>
     </div>
   </div>
 
-  <div id="tooltip"></div>
-  <div id="scrollbar-tooltip"></div>
-
-  <audio id="page-turn-audio" preload="auto">
-    <source src="turn.mp3" type="audio/mpeg">
-  </audio>
-
   <script>
-    function getPageLabel(page, total) {
-      if (page === 1) return "Front Cover";
-      if (page === 2 || page === 3) return "Introduction";
-      if (page === total) return "Back Cover";
-      const left = page % 2 === 0 ? page : page - 1;
-      return `Page ${left}-${left + 1}`;
-    }
-
-    $(function () {
-      const $flip = $("#flipbook");
-      const $scroll = $("#page-scrollbar");
-      const $scrollCont = $("#page-scrollbar-container");
-      const $prev = $("#prev-btn");
-      const $next = $("#next-btn");
-      const $first = $("#first-page-btn");
-      const $last = $("#last-page-btn");
-      const $loader = $("#loader");
-
-      const totalPages = 158;
-      const initial = 10;
-      const loaded = new Set();
-
-      function loadPage(i) {
-        if (!loaded.has(i)) {
-          $("<div/>", {
-            class: "page",
-            html: `<img src="pages/Page_${i}.png" width="100%" height="100%">`
-          }).appendTo($flip);
-          $flip.turn("addPage", `.page:nth-of-type(${i})`, i);
-          loaded.add(i);
-        }
+    $(document).ready(function () {
+      // Lazy load initial 10 pages
+      let pages = [];
+      for (let i = 1; i <= 60; i++) {
+        pages[i] = `Page_${i}.png`;
       }
 
-      const w = $flip.width();
-      const h = $flip.height();
-      $flip.turn({
-        width: w, height: h,
-        autoCenter: true,
+      $('#flipbook').turn({
+        width: $('#flipbook').width(),
+        height: $('#flipbook').height(),
+        pages: 60,
         elevation: 50,
         gradients: true,
-        pages: totalPages,
+        autoCenter: true,
         when: {
-          turning: (_, p) => {
-            $("#page-turn-audio")[0].play();
-            $scroll.val(p);
-            [p-1, p, p+1].forEach(i =>
-              i >= 1 && i <= totalPages && loadPage(i)
-            );
+          turning: function (event, page) {
+            if (page === 23) {
+              try {
+                $('#music-link-overlay').fadeIn();
+              } catch (e) {
+                console.error("Error showing overlay on page 23:", e);
+              }
+            } else {
+              $('#music-link-overlay').fadeOut();
+            }
+          },
+          turned: function (event, page) {
+            console.log('Current page:', page);
           }
         }
       });
 
-      for (let i = 1; i <= initial; i++) loadPage(i);
+      // Load only first 10 pages initially
+      for (let i = 1; i <= 10; i++) {
+        $('#flipbook').turn('addPage', $('<div />').html(`<img src="${pages[i]}" class="page">`), i);
+      }
 
-      $scroll.attr("max", totalPages);
-      $scroll.on("input", e => {
-        const p = +$(e.target).val();
-        $("#scrollbar-tooltip")
-          .text(getPageLabel(p, totalPages))
-          .css({ top: $(e.target).offset().top - 30, left: $(e.target).offset().left + (($(e.target).width() * (p-1)) / (totalPages-1)) - 20 })
-          .show();
-        $flip.turn("page", p);
-      }).on("mouseleave", () => $("#scrollbar-tooltip").hide());
-
-      $prev.click(() => $flip.turn("previous"));
-      $next.click(() => $flip.turn("next"));
-      $first.click(() => $flip.turn("page", 1));
-      $last.click(() => $flip.turn("page", totalPages));
-
-      $flip.show();
-      $loader.hide();
-      $scrollCont.css("visibility", "visible").show();
-      $prev.show(); $next.show();
-      $first.show(); $last.show();
+      $('#loader').hide();
+      $('#flipbook').show();
+      $('.nav-button').show();
+      $('#page-scrollbar-container').css({ display: 'block', visibility: 'visible' });
     });
   </script>
 </body>
