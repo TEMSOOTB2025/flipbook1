@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -197,19 +198,20 @@
     }
 
     /* ——— Only added below: Static overlay link for Page 23 ——— */
-    #page23-link {
-      display: none;
-      position: absolute;
-      z-index: 20000;
-      background: #FF0000;
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 4px;
-      text-decoration: none;
-      color: #FFF;
-      white-space: nowrap;
-      pointer-events: auto;
-    }
+  #page23-link {
+  display: none;
+  position: absolute;
+  z-index: 20000;
+  background: transparent;
+  padding: 6px 12px;
+  font-size: 11px; /* updated from default */
+  border-radius: 4px;
+  text-decoration: none;
+  color: #FFF;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
   </style>
 </head>
 <body>
@@ -275,14 +277,12 @@
     <source src="turn.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- ——— Only added below: Overlay link for Page 23 at 30% from top, centered ——— -->
+  <!-- ——— Only added below: Overlay link for Page 23 at 30% from top, centered on the right page ——— -->
   <a
     id="page23-link"
     href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
     target="_blank"
-  >
-    🔗 View related file
-  </a>
+  >Link to Music</a>
 
   <script>
     function getPageLabel(page, totalPages) {
@@ -335,14 +335,14 @@
           },
           turned: function (event, page) {
             if (page === 23) {
-              // Compute overlay position 30% from top, centered
+              // Compute overlay position 30% from top, centered on the right half of the flipbook
               const flipOffset = $flipbook.offset();
               const fbWidth   = $flipbook.width();
               const fbHeight  = $flipbook.height();
               const linkWidth = $("#page23-link").outerWidth(true);
 
               const topPos  = flipOffset.top + fbHeight * 0.3;
-              const leftPos = flipOffset.left + (fbWidth - linkWidth) / 2;
+              const leftPos = flipOffset.left + fbWidth * 0.75 - linkWidth / 2;
 
               $("#page23-link").css({
                 top:    topPos + "px",
