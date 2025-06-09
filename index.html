@@ -27,6 +27,7 @@
       margin-left: 2%;
       margin-top: 2%;
 
+
       flex-shrink: 0;
     }
 
@@ -52,6 +53,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+
     }
 
     #flipbook-wrapper {
@@ -61,16 +63,18 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
+     
     }
 
     #flipbook {
       width: 83%;
       height: 100%;
-      display: none;
+      display: false;
       background: solid;
       touch-action: manipulation;
       position: relative;
       justify-content: center;
+
     }
 
     .page {
@@ -108,6 +112,7 @@
       visibility: visible;
       opacity: 1;
     }
+
 
     .nav-button {
       background: transparent;
@@ -162,6 +167,7 @@
       border-radius: 4px;
       display: none;
       pointer-events: none;
+     
     }
 
     #loader {
@@ -171,7 +177,7 @@
       margin-top: 100px;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 900px) {
       #main-layout {
         flex-direction: column;
         align-items: center;
@@ -194,8 +200,8 @@
         display: none !important;
       }
     }
-    
-    /* Hidden link for Page 23 */
+
+    /* ——— Only added below: Hidden link for Page 23 ——— */
     #page23-link {
       display: none;
       position: absolute;
@@ -237,7 +243,7 @@
           <div class="custom-tooltip">Previous Page</div>
         </div>
 
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;" >
           <button id="first-page-btn" class="nav-button">
             <img src="first.png" alt="First Page">
           </button>
@@ -260,6 +266,8 @@
           <div class="custom-tooltip">Last Page</div>
         </div>
       </div>
+  
+
 
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
@@ -274,12 +282,13 @@
     <source src="turn.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Hidden link that appears only on Page 23 when hovered in top 20% -->
+  <!-- ——— Only added below: Hidden link that appears on Page 23 when top‑20% hover ——— -->
   <a
     id="page23-link"
     href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
     target="_blank"
   >
+    🔗 View related file
   </a>
 
   <script>
@@ -331,6 +340,14 @@
               }
             }
           },
+          // ——— Added ‘turned’ callback here (no other code changed) ———
+          turned: function (event, page) {
+            // Whenever the flipbook finishes turning:
+            // Hide the Page 23 link if we're not on Page 23
+            if (page !== 23) {
+              $("#page23-link").hide();
+            }
+          }
         }
       });
 
@@ -384,22 +401,12 @@
       $("#first-page-btn").show();
       $("#last-page-btn").show();
 
-      // —————— Only added below: mouseover logic for Page 23 ——————
+      // ——— Only added below: mouseover logic for Page 23 ———
 
-      // Hide/link state on load
+      // Ensure link is initially hidden
       $("#page23-link").hide();
 
-      // When the flipbook completes turning, show/hide the link container if page 23 is visible
-      $flipbook.on("turned", function (event, page) {
-        if (page === 23) {
-          // Keep the link hidden until mouse enters top 20%
-          $("#page23-link").hide();
-        } else {
-          $("#page23-link").hide();
-        }
-      });
-
-      // On mouse movement over the flipbook area, check for Page 23 + top 20%
+      // On mouse movement over the flipbook, check if we’re on Page 23
       $flipbook.on("mousemove", function (e) {
         const currentPage = $flipbook.turn("page");
         if (currentPage !== 23) {
@@ -425,7 +432,7 @@
         }
       });
 
-      // If the mouse leaves the flipbook entirely, hide the link
+      // When the mouse leaves the flipbook area, hide the link
       $flipbook.on("mouseleave", function () {
         $("#page23-link").hide();
       });
