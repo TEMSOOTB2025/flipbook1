@@ -308,8 +308,8 @@
       }
     });
 
-    // Initial preload
-    for (let i = 1; i <= Math.min(4, totalPages); i++) {
+    // ✅ Initial preload: first 10 pages
+    for (let i = 1; i <= Math.min(10, totalPages); i++) {
       addPage(i);
     }
 
