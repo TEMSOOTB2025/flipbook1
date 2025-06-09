@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -205,8 +205,7 @@
     #page23-link {
       display: none;
       position: absolute;
-      z-index: 9999;
-     
+      z-index: 20000;
       background: #FF0000;
       padding: 6px 10px;
       font-size: 14px;
@@ -284,14 +283,13 @@
   </audio>
 
   <!-- ——— Only added below: Hidden link that appears on Page 23 when top‑20% hover ——— -->
-  <!-- ——— Only added below: Hidden link that appears on Page 23 when top‑20% hover ——— -->
-<a
-  id="page23-link"
-  href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
-  target="_blank"
->
-  🔗 View related file
-</a>
+  <a
+    id="page23-link"
+    href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
+    target="_blank"
+  >
+    🔗 View related file
+  </a>
 
   <script>
     function getPageLabel(page, totalPages) {
@@ -348,7 +346,6 @@
             // Hide the Page 23 link if we're not on Page 23
             if (page !== 23) {
               $("#page23-link").hide();
-           
             }
           }
         }
@@ -409,37 +406,36 @@
       // Ensure link is initially hidden
       $("#page23-link").hide();
 
-      // On mouse movement over the flipbook, check if we’re on Page 23
-      $flipbook.on("mousemove", function (e) {
+      // Bind mousemove to wrapper instead of #flipbook
+      $("#flipbook-wrapper").on("mousemove", function (e) {
         const currentPage = $flipbook.turn("page");
         if (currentPage !== 23) {
           $("#page23-link").hide();
           return;
         }
 
-        const offset = $flipbook.offset();
-        const y = e.pageY - offset.top;
+        const flipOffset = $flipbook.offset();
+        const y = e.pageY - flipOffset.top;
         const height = $flipbook.height();
         const threshold = height * 0.2;
 
         if (y <= threshold) {
-  // compute flipbook width and link width
-  const fbWidth = $flipbook.width();
-  const linkWidth = $("#page23-link").outerWidth(true);
-alert(linkWidth);
-  $("#page23-link").css({
-    top:    offset.top + 5 + "px",
-    left:   offset.left + fbWidth - linkWidth - 10 + "px",
-    opacity: 1,
-    pointerEvents: "auto"
-  }).show();
-} else {
-  $("#page23-link").hide();
-}
+          const fbWidth   = $flipbook.width();
+          const linkWidth = $("#page23-link").outerWidth(true);
+
+          $("#page23-link").css({
+            top:    flipOffset.top + 5 + "px",
+            left:   flipOffset.left + fbWidth - linkWidth - 10 + "px",
+            opacity: 1,
+            pointerEvents: "auto"
+          }).show();
+        } else {
+          $("#page23-link").hide();
+        }
       });
 
-      // When the mouse leaves the flipbook area, hide the link
-      $flipbook.on("mouseleave", function () {
+      // When the mouse leaves the wrapper entirely, hide the link
+      $("#flipbook-wrapper").on("mouseleave", function () {
         $("#page23-link").hide();
       });
     });
