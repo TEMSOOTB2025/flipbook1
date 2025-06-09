@@ -297,7 +297,7 @@ margin-top: 2%;
         if (i === 23) {
           const $page = $('<div class="page" id="page-23"><div id="page-23-container" style="width:100%;height:100%;overflow:auto;">Loading Page 23...</div></div>');
           $flipbook.turn("addPage", $page, i);
-		alert(i);
+	
           loadedPages.add(i);
 
           $.ajax({
@@ -338,8 +338,11 @@ margin-top: 2%;
               if (i >= 1 && i <= totalPages) {
                 // Always reload Page 23 content when it's part of the view
                 if (i === 23 && loadedPages.has(i)) {
+			alert(i);
                   loadedPages.delete(i);
+			alert("deleted 23");
                   $('#flipbook').turn('removePage', 23);
+			
                 }
                 loadPage(i);
               }
