@@ -17,6 +17,7 @@
     #main-layout {
       display: flex;
       align-items: flex-start;
+      
       box-sizing: border-box;
     }
 
@@ -25,6 +26,7 @@
       margin-right: 1%px;
       margin-left: 2%;
       margin-top: 2%;
+
       flex-shrink: 0;
     }
 
@@ -45,6 +47,7 @@
 
     #flipbook-display-area {
       margin-top: 2%;
+
       flex-grow: 1;
       display: flex;
       flex-direction: column;
@@ -77,7 +80,6 @@
       overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
     }
-
     .tooltip-wrapper {
       position: absolute;
       display: inline-block;
@@ -139,24 +141,34 @@
       width: 100%;
     }
 
+    #tooltip {
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      pointer-events: none;
+      z-index: 1001;
+    }
+
+    #scrollbar-tooltip {
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+      pointer-events: none;
+    }
+
     #loader {
       font-family: Arial;
       color: white;
       text-align: center;
       margin-top: 100px;
-    }
-
-    #page23-link {
-      position: absolute;
-      z-index: 1003;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 5px 10px;
-      font-size: 14px;
-      border-radius: 5px;
-      text-decoration: none;
-      color: #333;
-      display: none;
-      transition: opacity 0.2s;
     }
 
     @media (max-width: 1200px) {
@@ -181,6 +193,21 @@
       #prev-btn, #next-btn {
         display: none !important;
       }
+    }
+    
+    /* Hidden link for Page 23 */
+    #page23-link {
+      display: none;
+      position: absolute;
+      z-index: 1003;
+      background: rgba(255,255,255,0.9);
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+      pointer-events: none;
+      transition: opacity 0.15s;
     }
   </style>
 </head>
@@ -210,7 +237,7 @@
           <div class="custom-tooltip">Previous Page</div>
         </div>
 
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;" >
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
           <button id="first-page-btn" class="nav-button">
             <img src="first.png" alt="First Page">
           </button>
@@ -240,66 +267,167 @@
     </div>
   </div>
 
-  <!-- Hidden Page 23 Hover Link -->
-  <a id="page23-link" href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank">
+  <div id="tooltip"></div>
+  <div id="scrollbar-tooltip"></div>
+
+  <audio id="page-turn-audio" preload="auto">
+    <source src="turn.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Hidden link that appears only on Page 23 when hovered in top 20% -->
+  <a
+    id="page23-link"
+    href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
+    target="_blank"
+  >
   </a>
 
   <script>
-    $(document).ready(function () {
-      const pageCount = 158;
-      const initialLoadCount = 10;
+    function getPageLabel(page, totalPages) {
+      if (page === 1) return "Front Cover";
+      if (page === 2 || page === 3) return "Introduction";
+      if (page === totalPages) return "Back Cover";
+      const left = page % 2 === 0 ? page : page - 1;
+      const right = left + 1;
+      return `Page ${left}-${right}`;
+    }
 
-      // Load first 10 pages
-      for (let i = 1; i <= initialLoadCount; i++) {
-        $('#flipbook').append('<div class="page"><img src="Page_' + i + '.png" style="width:100%;height:100%;object-fit:contain;"></div>');
+    $(function () {
+      const $flipbook = $("#flipbook");
+      const $scrollbar = $("#page-scrollbar");
+      const $scrollbarContainer = $("#page-scrollbar-container");
+      const $prev = $("#prev-btn");
+      const $next = $("#next-btn");
+      const $loader = $("#loader");
+
+      const totalPages = 158;
+      const initialPages = 10;
+      const loadedPages = new Set();
+
+      function loadPage(i) {
+        if (!loadedPages.has(i)) {
+          const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
+          $flipbook.turn("addPage", $page, i);
+          loadedPages.add(i);
+        }
       }
 
-      // Initialize flipbook
-      $('#flipbook').turn({
-        width: $('#flipbook-wrapper').width(),
-        height: $('#flipbook-wrapper').width() / (16 / 10),
+      const wrapperWidth = $flipbook.width();
+      const wrapperHeight = $flipbook.height();
+      $flipbook.turn({
+        width: wrapperWidth,
+        height: wrapperHeight,
         autoCenter: true,
-        pages: pageCount,
+        elevation: 50,
+        gradients: true,
+        pages: totalPages,
         when: {
           turning: function (event, page) {
-            // Lazy load page if missing
-            const $pages = $('#flipbook').children();
-            if ($pages.length < pageCount && !$pages.eq(page - 1).html()) {
-              $('#flipbook').children().eq(page - 1).html('<img src="Page_' + page + '.png" style="width:100%;height:100%;object-fit:contain;">');
+            $("#page-turn-audio")[0].play();
+            $scrollbar.val(page);
+            for (let i = page - 1; i <= page + 1; i++) {
+              if (i >= 1 && i <= totalPages) {
+                loadPage(i);
+              }
             }
           },
-          turned: function (event, page) {
-            if (page === 23) {
-              $('#page23-link').show();
-            } else {
-              $('#page23-link').hide();
-            }
-          }
         }
       });
 
-      $('#flipbook').show();
-      $('#loader').hide();
-      $('#page-scrollbar-container').show().css('visibility', 'visible');
+      for (let i = 1; i <= initialPages; i++) {
+        loadPage(i);
+      }
 
-      // Page 23 mouse zone trigger
-      $('#flipbook').on('mousemove', function (e) {
-        const currentPage = $('#flipbook').turn('page');
-        if (currentPage !== 23) return;
+      $scrollbar.attr("max", totalPages);
+      $scrollbar.on("input", function (e) {
+        const page = parseInt($(this).val());
+        const label = getPageLabel(page, totalPages);
+        const tooltip = $("#scrollbar-tooltip");
 
         const offset = $(this).offset();
-        const y = e.pageY - offset.top;
-        const h = $(this).height();
-        const top20 = h * 0.2;
+        const width = $(this).width();
+        const percent = (page - 1) / (totalPages - 1);
+        const left = offset.left + percent * width;
 
-        if (y <= top20) {
-          $('#page23-link').css({
-            top: offset.top + 10 + 'px',
-            left: offset.left + 20 + 'px'
-          }).fadeIn(100);
+        tooltip.text(label)
+               .css({ top: offset.top - 30, left: left - 20 })
+               .show();
+
+        $flipbook.turn("page", page);
+      });
+
+      $scrollbar.on("mouseleave", function () {
+        $("#scrollbar-tooltip").hide();
+      });
+
+      $prev.on("click", function () {
+        $flipbook.turn("previous");
+      });
+
+      $next.on("click", function () {
+        $flipbook.turn("next");
+      });
+
+      $("#first-page-btn").on("click", function () {
+        $flipbook.turn("page", 1);
+      });
+
+      $("#last-page-btn").on("click", function () {
+        $flipbook.turn("page", totalPages);
+      });
+
+      $flipbook.show();
+      $loader.hide();
+      $scrollbarContainer.css("visibility", "visible").show();
+      $prev.show();
+      $next.show();
+      $("#first-page-btn").show();
+      $("#last-page-btn").show();
+
+      // —————— Only added below: mouseover logic for Page 23 ——————
+
+      // Hide/link state on load
+      $("#page23-link").hide();
+
+      // When the flipbook completes turning, show/hide the link container if page 23 is visible
+      $flipbook.on("turned", function (event, page) {
+        if (page === 23) {
+          // Keep the link hidden until mouse enters top 20%
+          $("#page23-link").hide();
         } else {
-          $('#page23-link').fadeOut(100);
+          $("#page23-link").hide();
         }
+      });
+
+      // On mouse movement over the flipbook area, check for Page 23 + top 20%
+      $flipbook.on("mousemove", function (e) {
+        const currentPage = $flipbook.turn("page");
+        if (currentPage !== 23) {
+          $("#page23-link").hide();
+          return;
+        }
+
+        const offset = $flipbook.offset();
+        const y = e.pageY - offset.top;
+        const height = $flipbook.height();
+        const threshold = height * 0.2;
+
+        if (y <= threshold) {
+          // Position the link near the top-left inside the flipbook
+          $("#page23-link").css({
+            top: offset.top + 5 + "px",
+            left: offset.left + 10 + "px",
+            opacity: 1,
+            pointerEvents: "auto"
+          }).show();
+        } else {
+          $("#page23-link").hide();
+        }
+      });
+
+      // If the mouse leaves the flipbook entirely, hide the link
+      $flipbook.on("mouseleave", function () {
+        $("#page23-link").hide();
       });
     });
   </script>
