@@ -1,9 +1,9 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -198,18 +198,20 @@
     }
 
     /* ——— Only added below: Static overlay link for Page 23 ——— */
-  #page23-link {
+#page23-link {
   display: none;
   position: absolute;
   z-index: 20000;
-  background: transparent;
+  background: red;
   padding: 6px 12px;
-  font-size: 11px; /* updated from default */
+  font-size: 11px;
   border-radius: 4px;
   text-decoration: none;
-  color: #FFF;
+  color: white;
   white-space: nowrap;
-  pointer-events: auto;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
   </style>
@@ -281,8 +283,7 @@
   <a
     id="page23-link"
     href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
-    target="_blank"
-  >Link to Music</a>
+    target="_blank">Link to Music</a>
 
   <script>
     function getPageLabel(page, totalPages) {
