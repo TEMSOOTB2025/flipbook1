@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,6 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
-    /* your full existing CSS stays here — unchanged */
     body {
       margin: 0;
       font-family: sans-serif;
@@ -18,14 +18,17 @@
     #main-layout {
       display: flex;
       align-items: flex-start;
+      
       box-sizing: border-box;
     }
 
     #logo-caption {
       width: 180px;
       margin-right: 1%px;
-      margin-left: 2%;
-      margin-top: 2%;
+     margin-left: 2%;
+margin-top: 2%;
+
+
       flex-shrink: 0;
     }
 
@@ -45,11 +48,13 @@
     }
 
     #flipbook-display-area {
-      margin-top: 2%;
+	margin-top: 2%;
+
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
+
     }
 
     #flipbook-wrapper {
@@ -59,6 +64,7 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
+     
     }
 
     #flipbook {
@@ -69,6 +75,7 @@
       touch-action: manipulation;
       position: relative;
       justify-content: center;
+
     }
 
     .page {
@@ -78,8 +85,7 @@
       overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
     }
-
-    .tooltip-wrapper {
+ .tooltip-wrapper {
       position: absolute;
       display: inline-block;
     }
@@ -107,6 +113,7 @@
       visibility: visible;
       opacity: 1;
     }
+
 
     .nav-button {
       background: transparent;
@@ -161,6 +168,7 @@
       border-radius: 4px;
       display: none;
       pointer-events: none;
+     
     }
 
     #loader {
@@ -170,7 +178,7 @@
       margin-top: 100px;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 900px) {
       #main-layout {
         flex-direction: column;
         align-items: center;
@@ -214,14 +222,14 @@
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-        <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
+          <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
           <button id="prev-btn" class="nav-button">
             <img src="previous-arrow.png" alt="Previous">
           </button>
           <div class="custom-tooltip">Previous Page</div>
         </div>
 
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;" >
           <button id="first-page-btn" class="nav-button">
             <img src="first.png" alt="First Page">
           </button>
@@ -244,98 +252,151 @@
           <div class="custom-tooltip">Last Page</div>
         </div>
       </div>
+	
+
 
       <div id="page-scrollbar-container">
-        <input type="range" id="page-scrollbar">
+        <input type="range" id="page-scrollbar" min="1" max="1" value="1">
       </div>
     </div>
   </div>
 
-<script>
-  $(document).ready(function () {
-    const totalPages = 158;
+  <div id="tooltip"></div>
+  <div id="scrollbar-tooltip"></div>
 
-    $('#flipbook').turn({
-      width: $('#flipbook-wrapper').width(),
-      height: $('#flipbook-wrapper').width() / (16 / 10),
-      autoCenter: true,
-      pages: totalPages,
-      when: {
-        turning: function (event, page) {
-          updateScrollbar(page);
-        },
-        turned: function () {
-          $('#loader').hide();
-          $('#flipbook').show();
-          $('.nav-button').fadeIn();
-          $('#page-scrollbar-container').css('visibility', 'visible').fadeIn();
-        }
-      }
-    });
+  <audio id="page-turn-audio" preload="auto">
+    <source src="turn.mp3" type="audio/mpeg">
+  </audio>
 
-    function addPage(pageNumber) {
-      if (pageNumber === 23) {
-        try {
-          const pageEl = $('<div />', {
-            class: 'page',
-            html: `<img src="pages/Page_${pageNumber}.png" style="width:100%; height:100%;">`
+  <script>
+    function getPageLabel(page, totalPages) {
+      if (page === 1) return "Front Cover";
+      if (page === 2 || page === 3) return "Introduction";
+      if (page === totalPages) return "Back Cover";
+      const left = page % 2 === 0 ? page : page - 1;
+      const right = left + 1;
+      return `Page ${left}-${right}`;
+    }
+
+    $(function () {
+      const $flipbook = $("#flipbook");
+      const $scrollbar = $("#page-scrollbar");
+      const $scrollbarContainer = $("#page-scrollbar-container");
+      const $prev = $("#prev-btn");
+      const $next = $("#next-btn");
+      const $loader = $("#loader");
+
+      const totalPages = 158;
+      const initialPages = 10;
+      const loadedPages = new Set();
+
+      const page23Url = "https://temsootb2025.github.io/OOTBPg23/Pg23.html"; // <-- your custom Page 23 URL
+
+      function loadPage(i) {
+        // --- NEW: Page 23 override start ---
+        if (i === 23) {
+          const $page = $('<div class="page" id="page-23"><div id="page-23-container" style="width:100%;height:100%;overflow:auto;">Loading Page 23...</div></div>');
+          $flipbook.turn("addPage", $page, i);
+          loadedPages.add(i);
+
+          $.ajax({
+            url: page23Url,
+            success: function (data) {
+              $('#page-23-container').html(data);
+            },
+            error: function () {
+              $('#page-23-container').html('<div style="color: red; padding: 10px;">Failed to load page 23.</div>');
+            }
           });
-          $('#flipbook').turn('addPage', pageEl, pageNumber);
-        } catch (error) {
-          console.error(`Error loading Page ${pageNumber}:`, error);
-          const errorPage = $('<div />', {
-            class: 'page',
-            html: `<div style="padding:20px; font-size:18px; color:red;">Page ${pageNumber} failed to load.</div>`
-          });
-          $('#flipbook').turn('addPage', errorPage, pageNumber);
+          return;
         }
-      } else {
-        const pageEl = $('<div />', {
-          class: 'page',
-          html: `<img src="pages/Page_${pageNumber}.png" style="width:100%; height:100%;">`
-        });
-        $('#flipbook').turn('addPage', pageEl, pageNumber);
-      }
-    }
+        // --- NEW: Page 23 override end ---
 
-    // Lazy load nearby pages
-    $('#flipbook').bind('turning', function (event, page) {
-      for (let offset = -2; offset <= 2; offset++) {
-        const p = page + offset;
-        if (p >= 1 && p <= totalPages && !$('#flipbook').turn('hasPage', p)) {
-          addPage(p);
+        if (!loadedPages.has(i)) {
+          const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
+          $flipbook.turn("addPage", $page, i);
+          loadedPages.add(i);
         }
       }
+
+      const wrapperWidth = $flipbook.width();
+      const wrapperHeight = $flipbook.height();
+      $flipbook.turn({
+        width: wrapperWidth,
+        height: wrapperHeight,
+        autoCenter: true,
+        elevation: 50,
+        gradients: true,
+        pages: totalPages,
+        when: {
+          turning: function (event, page) {
+            $("#page-turn-audio")[0].play();
+            $scrollbar.val(page);
+            for (let i = page - 1; i <= page + 1; i++) {
+              if (i >= 1 && i <= totalPages) {
+                // Always reload Page 23 content when it's part of the view
+                if (i === 23 && loadedPages.has(i)) {
+                  loadedPages.delete(i);
+                  $('#flipbook').turn('removePage', 23);
+                }
+                loadPage(i);
+              }
+            }
+          },
+        }
+      });
+
+      for (let i = 1; i <= initialPages; i++) {
+        loadPage(i);
+      }
+
+      $scrollbar.attr("max", totalPages);
+      $scrollbar.on("input", function (e) {
+        const page = parseInt($(this).val());
+        const label = getPageLabel(page, totalPages);
+        const tooltip = $("#scrollbar-tooltip");
+
+        const offset = $(this).offset();
+        const width = $(this).width();
+        const percent = (page - 1) / (totalPages - 1);
+        const left = offset.left + percent * width;
+
+        tooltip.text(label)
+               .css({ top: offset.top - 30, left: left - 20 })
+               .show();
+
+        $flipbook.turn("page", page);
+      });
+
+      $scrollbar.on("mouseleave", function () {
+        $("#scrollbar-tooltip").hide();
+      });
+
+      $prev.on("click", function () {
+        $flipbook.turn("previous");
+      });
+
+      $next.on("click", function () {
+        $flipbook.turn("next");
+      });
+
+      $("#first-page-btn").on("click", function () {
+        $flipbook.turn("page", 1);
+      });
+
+      $("#last-page-btn").on("click", function () {
+        $flipbook.turn("page", totalPages);
+      });
+
+      $flipbook.show();
+      $loader.hide();
+      $scrollbarContainer.css("visibility", "visible").show();
+      $prev.show();
+      $next.show();
+      $("#first-page-btn").show();
+      $("#last-page-btn").show();
     });
-
-    // ✅ Initial preload: first 10 pages
-    for (let i = 1; i <= Math.min(10, totalPages); i++) {
-      addPage(i);
-    }
-
-    $('#next-btn').click(() => $('#flipbook').turn('next'));
-    $('#prev-btn').click(() => $('#flipbook').turn('previous'));
-    $('#first-page-btn').click(() => $('#flipbook').turn('page', 1));
-    $('#last-page-btn').click(() => $('#flipbook').turn('page', totalPages));
-
-    // Scrollbar
-    const scrollbar = $('#page-scrollbar');
-    scrollbar.attr('min', 1).attr('max', totalPages).val(1);
-    scrollbar.on('input', function () {
-      $('#flipbook').turn('page', parseInt(this.value));
-    });
-
-    function updateScrollbar(page) {
-      scrollbar.val(page);
-    }
-
-    // Resize handler
-    $(window).on('resize', function () {
-      $('#flipbook').turn('size', $('#flipbook-wrapper').width(), $('#flipbook-wrapper').width() / (16 / 10));
-    });
-  });
-</script>
-
+  </script>
 
 </body>
 </html>
