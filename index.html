@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -26,7 +26,6 @@
       margin-right: 1%px;
       margin-left: 2%;
       margin-top: 2%;
-
 
       flex-shrink: 0;
     }
@@ -53,7 +52,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-
     }
 
     #flipbook-wrapper {
@@ -63,18 +61,16 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-     
     }
 
     #flipbook {
       width: 83%;
       height: 100%;
-      display: false;
+      display: none;
       background: solid;
       touch-action: manipulation;
       position: relative;
       justify-content: center;
-
     }
 
     .page {
@@ -84,6 +80,7 @@
       overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
     }
+
     .tooltip-wrapper {
       position: absolute;
       display: inline-block;
@@ -112,7 +109,6 @@
       visibility: visible;
       opacity: 1;
     }
-
 
     .nav-button {
       background: transparent;
@@ -167,7 +163,6 @@
       border-radius: 4px;
       display: none;
       pointer-events: none;
-     
     }
 
     #loader {
@@ -197,23 +192,23 @@
       }
 
       #prev-btn, #next-btn {
-        display: none;
+        display: none !important;
       }
   
 
-    /* ——— Only added below: Hidden link for Page 23 ——— */
+    /* ——— Only added below: Static overlay link for Page 23 ——— */
     #page23-link {
       display: none;
       position: absolute;
       z-index: 20000;
       background: #FF0000;
-      padding: 6px 10px;
+      padding: 6px 12px;
       font-size: 14px;
       border-radius: 4px;
       text-decoration: none;
-      color: #333;
-      pointer-events: none;
-      transition: opacity 0.15s;
+      color: #FFF;
+      white-space: nowrap;
+      pointer-events: auto;
     }
   </style>
 </head>
@@ -243,7 +238,7 @@
           <div class="custom-tooltip">Previous Page</div>
         </div>
 
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;" >
+        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
           <button id="first-page-btn" class="nav-button">
             <img src="first.png" alt="First Page">
           </button>
@@ -266,8 +261,6 @@
           <div class="custom-tooltip">Last Page</div>
         </div>
       </div>
-  
-
 
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
@@ -282,7 +275,7 @@
     <source src="turn.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- ——— Only added below: Hidden link that appears on Page 23 when top‑20% hover ——— -->
+  <!-- ——— Only added below: Overlay link for Page 23 at 30% from top, centered ——— -->
   <a
     id="page23-link"
     href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
@@ -340,11 +333,23 @@
               }
             }
           },
-          // ——— Added ‘turned’ callback here (no other code changed) ———
           turned: function (event, page) {
-            // Whenever the flipbook finishes turning:
-            // Hide the Page 23 link if we're not on Page 23
-            if (page !== 23) {
+            if (page === 23) {
+              // Compute overlay position 30% from top, centered
+              const flipOffset = $flipbook.offset();
+              const fbWidth   = $flipbook.width();
+              const fbHeight  = $flipbook.height();
+              const linkWidth = $("#page23-link").outerWidth(true);
+
+              const topPos  = flipOffset.top + fbHeight * 0.3;
+              const leftPos = flipOffset.left + (fbWidth - linkWidth) / 2;
+
+              $("#page23-link").css({
+                top:    topPos + "px",
+                left:   leftPos + "px",
+                display: "block"
+              });
+            } else {
               $("#page23-link").hide();
             }
           }
@@ -400,44 +405,6 @@
       $next.show();
       $("#first-page-btn").show();
       $("#last-page-btn").show();
-
-      // ——— Only added below: mouseover logic for Page 23 ———
-
-      // Ensure link is initially hidden
-      $("#page23-link").hide();
-
-      // Bind mousemove to wrapper instead of #flipbook
-      $("#flipbook-wrapper").on("mousemove", function (e) {
-        const currentPage = $flipbook.turn("page");
-        if (currentPage !== 23) {
-          $("#page23-link").hide();
-          return;
-        }
-
-        const flipOffset = $flipbook.offset();
-        const y = e.pageY - flipOffset.top;
-        const height = $flipbook.height();
-        const threshold = height * 0.2;
-
-        if (y <= threshold) {
-          const fbWidth   = $flipbook.width();
-          const linkWidth = $("#page23-link").outerWidth(true);
-
-          $("#page23-link").css({
-            top:    flipOffset.top + 5 + "px",
-            left:   flipOffset.left + fbWidth - linkWidth - 10 + "px",
-            opacity: 1,
-            pointerEvents: "auto"
-          }).show();
-        } else {
-          $("#page23-link").hide();
-        }
-      });
-
-      // When the mouse leaves the wrapper entirely, hide the link
-      $("#flipbook-wrapper").on("mouseleave", function () {
-        $("#page23-link").hide();
-      });
     });
   </script>
 </body>
