@@ -290,7 +290,7 @@ margin-top: 2%;
       const initialPages = 10;
       const loadedPages = new Set();
 
-      const page23Url = "https://temsootb2025.github.io/OOTBPg23/index.html"; // <-- your custom Page 23 URL
+      const page23Url = "https://temsootb2025.github.io/OOTBPg23/Pg23.html"; // <-- your custom Page 23 URL
 
       function loadPage(i) {
         // --- NEW: Page 23 override start ---
@@ -338,9 +338,9 @@ margin-top: 2%;
               if (i >= 1 && i <= totalPages) {
                 // Always reload Page 23 content when it's part of the view
                 if (i === 23 && loadedPages.has(i)) {
-			alert(i);
+			
                   loadedPages.delete(i);
-			alert("deleted 23");
+			
                   $('#flipbook').turn('removePage', 23);
 			
                 }
