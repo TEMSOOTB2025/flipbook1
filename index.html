@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,17 +17,14 @@
     #main-layout {
       display: flex;
       align-items: flex-start;
-      
       box-sizing: border-box;
     }
 
     #logo-caption {
       width: 180px;
       margin-right: 1%px;
-     margin-left: 2%;
-margin-top: 2%;
-
-
+      margin-left: 2%;
+      margin-top: 2%;
       flex-shrink: 0;
     }
 
@@ -48,13 +44,11 @@ margin-top: 2%;
     }
 
     #flipbook-display-area {
-	margin-top: 2%;
-
+      margin-top: 2%;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-
     }
 
     #flipbook-wrapper {
@@ -64,7 +58,6 @@ margin-top: 2%;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-     
     }
 
     #flipbook {
@@ -75,7 +68,6 @@ margin-top: 2%;
       touch-action: manipulation;
       position: relative;
       justify-content: center;
-
     }
 
     .page {
@@ -85,7 +77,8 @@ margin-top: 2%;
       overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
     }
- .tooltip-wrapper {
+
+    .tooltip-wrapper {
       position: absolute;
       display: inline-block;
     }
@@ -113,7 +106,6 @@ margin-top: 2%;
       visibility: visible;
       opacity: 1;
     }
-
 
     .nav-button {
       background: transparent;
@@ -147,35 +139,24 @@ margin-top: 2%;
       width: 100%;
     }
 
-    #tooltip {
-      position: absolute;
-      background: #333;
-      color: white;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      display: none;
-      pointer-events: none;
-      z-index: 1001;
-    }
-
-    #scrollbar-tooltip {
-      position: absolute;
-      background: #333;
-      color: white;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      display: none;
-      pointer-events: none;
-     
-    }
-
     #loader {
       font-family: Arial;
       color: white;
       text-align: center;
       margin-top: 100px;
+    }
+
+    #page23-link {
+      position: absolute;
+      z-index: 1003;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #333;
+      display: none;
+      transition: opacity 0.2s;
     }
 
     @media (max-width: 900px) {
@@ -222,7 +203,7 @@ margin-top: 2%;
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-          <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
+        <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
           <button id="prev-btn" class="nav-button">
             <img src="previous-arrow.png" alt="Previous">
           </button>
@@ -252,8 +233,6 @@ margin-top: 2%;
           <div class="custom-tooltip">Last Page</div>
         </div>
       </div>
-	
-
 
       <div id="page-scrollbar-container">
         <input type="range" id="page-scrollbar" min="1" max="1" value="1">
@@ -261,142 +240,69 @@ margin-top: 2%;
     </div>
   </div>
 
-  <div id="tooltip"></div>
-  <div id="scrollbar-tooltip"></div>
-
-  <audio id="page-turn-audio" preload="auto">
-    <source src="turn.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Hidden Page 23 Hover Link -->
+  <a id="page23-link" href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank">
+    🔗 View related file
+  </a>
 
   <script>
-    function getPageLabel(page, totalPages) {
-      if (page === 1) return "Front Cover";
-      if (page === 2 || page === 3) return "Introduction";
-      if (page === totalPages) return "Back Cover";
-      const left = page % 2 === 0 ? page : page - 1;
-      const right = left + 1;
-      return `Page ${left}-${right}`;
-    }
+    $(document).ready(function () {
+      const pageCount = 158;
+      const initialLoadCount = 10;
 
-    $(function () {
-      const $flipbook = $("#flipbook");
-      const $scrollbar = $("#page-scrollbar");
-      const $scrollbarContainer = $("#page-scrollbar-container");
-      const $prev = $("#prev-btn");
-      const $next = $("#next-btn");
-      const $loader = $("#loader");
-
-      const totalPages = 158;
-      const initialPages = 10;
-      const loadedPages = new Set();
-
-      const page23Url = "https://temsootb2025.github.io/OOTBPg23/Pg23.html"; // <-- your custom Page 23 URL
-
-      function loadPage(i) {
-        // --- NEW: Page 23 override start ---
-        if (i === 23) {
-          const $page = $('<div class="page" id="page-23"><div id="page-23-container" style="width:100%;height:100%;overflow:auto;">Loading Page 23...</div></div>');
-          $flipbook.turn("addPage", $page, i);
-          loadedPages.add(i);
-
-          $.ajax({
-            url: page23Url,
-            success: function (data) {
-              $('#page-23-container').html(data);
-            },
-            error: function () {
-              $('#page-23-container').html('<div style="color: red; padding: 10px;">Failed to load page 23.</div>');
-            }
-          });
-          return;
-        }
-        // --- NEW: Page 23 override end ---
-
-        if (!loadedPages.has(i)) {
-          const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
-          $flipbook.turn("addPage", $page, i);
-          loadedPages.add(i);
-        }
+      // Load first 10 pages
+      for (let i = 1; i <= initialLoadCount; i++) {
+        $('#flipbook').append('<div class="page"><img src="Page_' + i + '.png" style="width:100%;height:100%;object-fit:contain;"></div>');
       }
 
-      const wrapperWidth = $flipbook.width();
-      const wrapperHeight = $flipbook.height();
-      $flipbook.turn({
-        width: wrapperWidth,
-        height: wrapperHeight,
+      // Initialize flipbook
+      $('#flipbook').turn({
+        width: $('#flipbook-wrapper').width(),
+        height: $('#flipbook-wrapper').width() / (16 / 10),
         autoCenter: true,
-        elevation: 50,
-        gradients: true,
-        pages: totalPages,
+        pages: pageCount,
         when: {
           turning: function (event, page) {
-            $("#page-turn-audio")[0].play();
-            $scrollbar.val(page);
-            for (let i = page - 1; i <= page + 1; i++) {
-              if (i >= 1 && i <= totalPages) {
-                // Always reload Page 23 content when it's part of the view
-                if (i === 23 && loadedPages.has(i)) {
-                  loadedPages.delete(i);
-                  $('#flipbook').turn('removePage', 23);
-                }
-                loadPage(i);
-              }
+            // Lazy load page if missing
+            const $pages = $('#flipbook').children();
+            if ($pages.length < pageCount && !$pages.eq(page - 1).html()) {
+              $('#flipbook').children().eq(page - 1).html('<img src="Page_' + page + '.png" style="width:100%;height:100%;object-fit:contain;">');
             }
           },
+          turned: function (event, page) {
+            if (page === 23) {
+              $('#page23-link').show();
+            } else {
+              $('#page23-link').hide();
+            }
+          }
         }
       });
 
-      for (let i = 1; i <= initialPages; i++) {
-        loadPage(i);
-      }
+      $('#flipbook').show();
+      $('#loader').hide();
+      $('#page-scrollbar-container').show().css('visibility', 'visible');
 
-      $scrollbar.attr("max", totalPages);
-      $scrollbar.on("input", function (e) {
-        const page = parseInt($(this).val());
-        const label = getPageLabel(page, totalPages);
-        const tooltip = $("#scrollbar-tooltip");
+      // Page 23 mouse zone trigger
+      $('#flipbook').on('mousemove', function (e) {
+        const currentPage = $('#flipbook').turn('page');
+        if (currentPage !== 23) return;
 
         const offset = $(this).offset();
-        const width = $(this).width();
-        const percent = (page - 1) / (totalPages - 1);
-        const left = offset.left + percent * width;
+        const y = e.pageY - offset.top;
+        const h = $(this).height();
+        const top20 = h * 0.2;
 
-        tooltip.text(label)
-               .css({ top: offset.top - 30, left: left - 20 })
-               .show();
-
-        $flipbook.turn("page", page);
+        if (y <= top20) {
+          $('#page23-link').css({
+            top: offset.top + 10 + 'px',
+            left: offset.left + 20 + 'px'
+          }).fadeIn(100);
+        } else {
+          $('#page23-link').fadeOut(100);
+        }
       });
-
-      $scrollbar.on("mouseleave", function () {
-        $("#scrollbar-tooltip").hide();
-      });
-
-      $prev.on("click", function () {
-        $flipbook.turn("previous");
-      });
-
-      $next.on("click", function () {
-        $flipbook.turn("next");
-      });
-
-      $("#first-page-btn").on("click", function () {
-        $flipbook.turn("page", 1);
-      });
-
-      $("#last-page-btn").on("click", function () {
-        $flipbook.turn("page", totalPages);
-      });
-
-      $flipbook.show();
-      $loader.hide();
-      $scrollbarContainer.css("visibility", "visible").show();
-      $prev.show();
-      $next.show();
-      $("#first-page-btn").show();
-      $("#last-page-btn").show();
     });
   </script>
-
 </body>
 </html>
