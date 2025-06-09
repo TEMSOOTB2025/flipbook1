@@ -178,7 +178,7 @@ margin-top: 2%;
       margin-top: 100px;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
       #main-layout {
         flex-direction: column;
         align-items: center;
@@ -290,7 +290,7 @@ margin-top: 2%;
       const initialPages = 10;
       const loadedPages = new Set();
 
-      const page23Url = "https://temsootb2025.github.io/OOTBPg23/index.txt"; // <-- your custom Page 23 URL
+      const page23Url = "https://temsootb2025.github.io/OOTBPg23/index.html"; // <-- your custom Page 23 URL
 
       function loadPage(i) {
         // --- NEW: Page 23 override start ---
@@ -303,6 +303,7 @@ margin-top: 2%;
             url: page23Url,
             success: function (data) {
               $('#page-23-container').html(data);
+		    alert(data);
             },
             error: function () {
               $('#page-23-container').html('<div style="color: red; padding: 10px;">Failed to load page 23.</div>');
