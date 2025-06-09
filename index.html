@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -14,79 +13,48 @@
       background-size: cover;
       overflow-x: hidden;
     }
-
-    #main-layout {
-      display: flex;
-      align-items: flex-start;
-      
-      box-sizing: border-box;
-    }
-
+    /* Layout */
+    #main-layout { display: flex; align-items: flex-start; box-sizing: border-box; }
     #logo-caption {
       width: 180px;
-      margin-right: 1%px;
-      margin-left: 2%;
-      margin-top: 2%;
-
+      margin: 2% 1% 0 2%;
       flex-shrink: 0;
     }
-
-    #logo-caption img {
-      width: 100%;
-      height: auto;
-    }
-
-    #logo-caption .caption {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    #logo-caption .address {
-      font-size: 13px;
-      line-height: 1.3;
-    }
+    #logo-caption img { width: 100%; height: auto; }
+    #logo-caption .caption { text-align: center; margin-top: 10px; }
+    #logo-caption .address { font-size: 13px; line-height: 1.3; }
 
     #flipbook-display-area {
-      margin-top: 2%;
-
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
+      margin-top: 2%; flex-grow: 1;
+      display: flex; flex-direction: column;
       align-items: center;
     }
-
     #flipbook-wrapper {
-      width: 83%;
-      aspect-ratio: 16 / 10;
+      width: 83%; aspect-ratio: 16/10;
       position: relative;
       display: flex;
       justify-content: center;
       align-items: flex-start;
     }
-
     #flipbook {
-      width: 83%;
-      height: 100%;
+      width: 83%; height: 100%;
       display: none;
       background: solid;
       touch-action: manipulation;
       position: relative;
       justify-content: center;
     }
-
     .page {
-      width: 50%;
-      height: 100%;
+      width: 50%; height: 100%;
       background: white;
       overflow: hidden;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
+      box-shadow:
+        inset 0 0 30px rgba(0,0,0,0.5),
+        0 0 8px rgba(0,0,0,0.2);
     }
 
-    .tooltip-wrapper {
-      position: absolute;
-      display: inline-block;
-    }
-
+    /* Tooltips */
+    .tooltip-wrapper { position: absolute; display: inline-block; }
     .custom-tooltip {
       visibility: hidden;
       background-color: #f3e8ff;
@@ -105,60 +73,39 @@
       font-size: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
-
     .tooltip-wrapper:hover .custom-tooltip {
       visibility: visible;
       opacity: 1;
     }
 
+    /* Nav buttons */
     .nav-button {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 5px;
+      background: transparent; border: none;
+      cursor: pointer; padding: 5px;
       display: none;
-      height: 70px;
-      width: 70px;
+      height: 70px; width: 70px;
       position: absolute;
     }
-
     .nav-button img {
-      height: 100%;
-      width: auto;
+      height: 100%; width: auto;
       opacity: 0.8;
     }
+    .nav-button img:hover { opacity: 1; }
 
-    .nav-button img:hover {
-      opacity: 1;
-    }
-
+    /* Scrollbar and loader */
     #page-scrollbar-container {
-      width: calc(70%);
-      margin-top: 1.8%;
-      display: none;
-      visibility: hidden;
+      width: 70%; margin-top: 1.8%;
+      display: none; visibility: hidden;
     }
-
-    #page-scrollbar {
-      width: 100%;
+    #page-scrollbar { width: 100%; }
+    #loader {
+      font-family: Arial; color: white;
+      text-align: center; margin-top: 100px;
     }
-
-    #tooltip {
-      position: absolute;
-      background: #333;
-      color: white;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      display: none;
-      pointer-events: none;
-      z-index: 1001;
-    }
-
+    #tooltip,
     #scrollbar-tooltip {
       position: absolute;
-      background: #333;
-      color: white;
+      background: #333; color: white;
       padding: 4px 8px;
       font-size: 12px;
       border-radius: 4px;
@@ -166,99 +113,77 @@
       pointer-events: none;
     }
 
-    #loader {
-      font-family: Arial;
-      color: white;
-      text-align: center;
-      margin-top: 100px;
+    /* Responsive */
+    @media (max-width: 900px) {
+      #main-layout { flex-direction: column; align-items: center; }
+      #logo-caption { margin-right: 0; margin-bottom: 20px; }
+      #flipbook-wrapper, #page-scrollbar-container { width: 90%; }
+      #prev-btn, #next-btn { display: none !important; }
     }
 
-    @media (max-width: 900px) {
-      #main-layout {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      #logo-caption {
-        margin-right: 0;
-        margin-bottom: 20px;
-      }
-
-      #flipbook-wrapper {
-        width: 90%;
-      }
-
-      #page-scrollbar-container {
-        width: 90%;
-      }
-
-      #prev-btn, #next-btn {
-        display: none !important;
-      }
-    
-
-    /* ——— Only added below: Static overlay link for Page 23 ——— */
-    #page23-link {
-      display: none;
+    /* Music link overlay */
+    #music-link-overlay {
       position: absolute;
-      z-index: 20000;
-      background: #FF0000;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: red;
       padding: 6px 12px;
-      font-size: 14px;
       border-radius: 4px;
+      z-index: 20000;
+    }
+    #music-link-overlay a {
+      color: white;
       text-decoration: none;
-      color: #FFF;
-      white-space: nowrap;
-      pointer-events: auto;
+      font-size: 11px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div id="loader">
-    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
+    <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading" width="60">
     <p>Loading flipbook, please wait...</p>
   </div>
 
   <div id="main-layout">
     <div id="logo-caption">
       <img src="TEMSLogo.png" alt="Timothy Edwards Logo">
-      <div class="caption">
-        <b>TIMOTHY EDWARDS</b> Middle School<br><br>
-        <div class="address">
-          <i>100 Arnold Way<br>South Windsor, CT 06074</i>
-        </div>
+      <div class="caption"><b>TIMOTHY EDWARDS</b> Middle School</div>
+      <div class="address">
+        <i>100 Arnold Way<br>South Windsor, CT 06074</i>
       </div>
     </div>
 
     <div id="flipbook-display-area">
       <div id="flipbook-wrapper">
-        <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
-          <button id="prev-btn" class="nav-button">
-            <img src="previous-arrow.png" alt="Previous">
-          </button>
-          <div class="custom-tooltip">Previous Page</div>
+        <!-- ➕ Overlay Link -->
+        <div id="music-link-overlay">
+          <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank">
+            Link to Music
+          </a>
         </div>
 
-        <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
-          <button id="first-page-btn" class="nav-button">
-            <img src="first.png" alt="First Page">
-          </button>
+        <!-- Navigation Controls -->
+        <div class="tooltip-wrapper" style="bottom:30%; left:0;">
+          <button id="prev-btn" class="nav-button"><img src="previous-arrow.png" alt="Previous"></button>
+          <div class="custom-tooltip">Previous Page</div>
+        </div>
+        <div class="tooltip-wrapper" style="bottom:20%; left:0;">
+          <button id="first-page-btn" class="nav-button"><img src="first.png" alt="First Page"></button>
           <div class="custom-tooltip">First Page</div>
         </div>
 
+        <!-- Flipbook Container -->
         <div id="flipbook"></div>
 
-        <div class="tooltip-wrapper" style="bottom: 30%; right: 7.25%;">
-          <button id="next-btn" class="nav-button">
-            <img src="next-arrow.png" alt="Next">
-          </button>
+        <!-- Navigation Controls Right -->
+        <div class="tooltip-wrapper" style="bottom:30%; right:7.25%;">
+          <button id="next-btn" class="nav-button"><img src="next-arrow.png" alt="Next"></button>
           <div class="custom-tooltip">Next Page</div>
         </div>
-
-        <div class="tooltip-wrapper" style="bottom: 20%; right: 7.25%;">
-          <button id="last-page-btn" class="nav-button">
-            <img src="last.png" alt="Last Page">
-          </button>
+        <div class="tooltip-wrapper" style="bottom:20%; right:7.25%;">
+          <button id="last-page-btn" class="nav-button"><img src="last.png" alt="Last Page"></button>
           <div class="custom-tooltip">Last Page</div>
         </div>
       </div>
@@ -276,138 +201,82 @@
     <source src="turn.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- ——— Only added below: Overlay link for Page 23 at 30% from top, centered ——— -->
-  <a
-    id="page23-link"
-    href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view"
-    target="_blank"
-  >
-    🔗 View related file
-  </a>
-
   <script>
-    function getPageLabel(page, totalPages) {
+    function getPageLabel(page, total) {
       if (page === 1) return "Front Cover";
       if (page === 2 || page === 3) return "Introduction";
-      if (page === totalPages) return "Back Cover";
+      if (page === total) return "Back Cover";
       const left = page % 2 === 0 ? page : page - 1;
-      const right = left + 1;
-      return `Page ${left}-${right}`;
+      return `Page ${left}-${left + 1}`;
     }
 
     $(function () {
-      const $flipbook = $("#flipbook");
-      const $scrollbar = $("#page-scrollbar");
-      const $scrollbarContainer = $("#page-scrollbar-container");
+      const $flip = $("#flipbook");
+      const $scroll = $("#page-scrollbar");
+      const $scrollCont = $("#page-scrollbar-container");
       const $prev = $("#prev-btn");
       const $next = $("#next-btn");
+      const $first = $("#first-page-btn");
+      const $last = $("#last-page-btn");
       const $loader = $("#loader");
 
       const totalPages = 158;
-      const initialPages = 10;
-      const loadedPages = new Set();
+      const initial = 10;
+      const loaded = new Set();
 
       function loadPage(i) {
-        if (!loadedPages.has(i)) {
-          const $page = $('<div class="page"><img src="pages/Page_' + i + '.png" width="100%" height="100%"></div>');
-          $flipbook.turn("addPage", $page, i);
-          loadedPages.add(i);
+        if (!loaded.has(i)) {
+          $("<div/>", {
+            class: "page",
+            html: `<img src="pages/Page_${i}.png" width="100%" height="100%">`
+          }).appendTo($flip);
+          $flip.turn("addPage", `.page:nth-of-type(${i})`, i);
+          loaded.add(i);
         }
       }
 
-      const wrapperWidth = $flipbook.width();
-      const wrapperHeight = $flipbook.height();
-      $flipbook.turn({
-        width: wrapperWidth,
-        height: wrapperHeight,
+      const w = $flip.width();
+      const h = $flip.height();
+      $flip.turn({
+        width: w, height: h,
         autoCenter: true,
         elevation: 50,
         gradients: true,
         pages: totalPages,
         when: {
-          turning: function (event, page) {
+          turning: (_, p) => {
             $("#page-turn-audio")[0].play();
-            $scrollbar.val(page);
-            for (let i = page - 1; i <= page + 1; i++) {
-              if (i >= 1 && i <= totalPages) {
-                loadPage(i);
-              }
-            }
-          },
-          turned: function (event, page) {
-            if (page === 23) {
-              // Compute overlay position 30% from top, centered
-              const flipOffset = $flipbook.offset();
-              const fbWidth   = $flipbook.width();
-              const fbHeight  = $flipbook.height();
-              const linkWidth = $("#page23-link").outerWidth(true);
-
-              const topPos  = flipOffset.top + fbHeight * 0.3;
-              const leftPos = flipOffset.left + (fbWidth - linkWidth) / 2;
-
-              $("#page23-link").css({
-                top:    topPos + "px",
-                left:   leftPos + "px",
-                display: "block"
-              });
-            } else {
-              $("#page23-link").hide();
-            }
+            $scroll.val(p);
+            [p-1, p, p+1].forEach(i =>
+              i >= 1 && i <= totalPages && loadPage(i)
+            );
           }
         }
       });
 
-      for (let i = 1; i <= initialPages; i++) {
-        loadPage(i);
-      }
+      for (let i = 1; i <= initial; i++) loadPage(i);
 
-      $scrollbar.attr("max", totalPages);
-      $scrollbar.on("input", function (e) {
-        const page = parseInt($(this).val());
-        const label = getPageLabel(page, totalPages);
-        const tooltip = $("#scrollbar-tooltip");
+      $scroll.attr("max", totalPages);
+      $scroll.on("input", e => {
+        const p = +$(e.target).val();
+        $("#scrollbar-tooltip")
+          .text(getPageLabel(p, totalPages))
+          .css({ top: $(e.target).offset().top - 30, left: $(e.target).offset().left + (($(e.target).width() * (p-1)) / (totalPages-1)) - 20 })
+          .show();
+        $flip.turn("page", p);
+      }).on("mouseleave", () => $("#scrollbar-tooltip").hide());
 
-        const offset = $(this).offset();
-        const width = $(this).width();
-        const percent = (page - 1) / (totalPages - 1);
-        const left = offset.left + percent * width;
+      $prev.click(() => $flip.turn("previous"));
+      $next.click(() => $flip.turn("next"));
+      $first.click(() => $flip.turn("page", 1));
+      $last.click(() => $flip.turn("page", totalPages));
 
-        tooltip.text(label)
-               .css({ top: offset.top - 30, left: left - 20 })
-               .show();
-
-        $flipbook.turn("page", page);
-      });
-
-      $scrollbar.on("mouseleave", function () {
-        $("#scrollbar-tooltip").hide();
-      });
-
-      $prev.on("click", function () {
-        $flipbook.turn("previous");
-      });
-
-      $next.on("click", function () {
-        $flipbook.turn("next");
-      });
-
-      $("#first-page-btn").on("click", function () {
-        $flipbook.turn("page", 1);
-      });
-
-      $("#last-page-btn").on("click", function () {
-        $flipbook.turn("page", totalPages);
-      });
-
-      $flipbook.show();
+      $flip.show();
       $loader.hide();
-      $scrollbarContainer.css("visibility", "visible").show();
-      $prev.show();
-      $next.show();
-      $("#first-page-btn").show();
-      $("#last-page-btn").show();
+      $scrollCont.css("visibility", "visible").show();
+      $prev.show(); $next.show();
+      $first.show(); $last.show();
     });
   </script>
 </body>
 </html>
-
