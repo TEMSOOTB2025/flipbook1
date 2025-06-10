@@ -3,8 +3,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-	
-
   <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
@@ -12,11 +10,7 @@
     body {
       margin: 0;
       font-family: sans-serif;
-     
-background: url('background.png') no-repeat center center;
-background-attachment: scroll; /* or remove it entirely */
-
-
+      background: url('background.png') no-repeat center center fixed;
       background-size: cover;
       overflow-x: hidden;
     }
@@ -24,11 +18,8 @@ background-attachment: scroll; /* or remove it entirely */
     #main-layout {
       display: flex;
       align-items: flex-start;
-      visibility: hidden;
+      
       box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.5s ease-in;
-
     }
 
     #logo-caption {
@@ -41,22 +32,10 @@ margin-top: 2%;
       flex-shrink: 0;
     }
 
-    
-#logo-caption img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1; /* Adjust based on actual logo shape */
-}
-.page img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 8 / 10; /* Adjust based on page image shape */
-
-
-  display: block;
-
-}
-
+    #logo-caption img {
+      width: 100%;
+      height: auto;
+    }
 
     #logo-caption .caption {
       text-align: center;
@@ -85,16 +64,18 @@ margin-top: 2%;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-     padding:1%
+	padding:1%
+     
     }
 
     #flipbook {
       width: 83%;
       height: 100%;
-           touch-action: manipulation;
+      display: none;
+      background: solid;
+      touch-action: manipulation;
       position: relative;
       justify-content: center;
-	aspect-ratio: 16 / 10;
 
     }
 
@@ -104,8 +85,6 @@ margin-top: 2%;
       background: white;
       overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 8px rgba(0,0,0,0.2);
-aspect-ratio: 16 / 10;
-
     }
  .tooltip-wrapper {
       position: absolute;
@@ -142,17 +121,11 @@ aspect-ratio: 16 / 10;
       border: none;
       cursor: pointer;
       padding: 5px;
-    
+      display: none;
       height: 70px;
       width: 70px;
       position: absolute;
-
-  	opacity: 0;
-
-
     }
-
-
 
     .nav-button img {
       height: 100%;
@@ -199,20 +172,14 @@ aspect-ratio: 16 / 10;
      
     }
 
+    #loader {
+      font-family: Arial;
+      color: white;
+      text-align: center;
+      margin-top: 100px;
+    }
 
-
-#loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-   margin-top: 100px;
-
-}
-
-
-    @media (max-width: 1200px) {
+    @media (max-width: 900px) {
       #main-layout {
         flex-direction: column;
         align-items: center;
@@ -232,7 +199,7 @@ aspect-ratio: 16 / 10;
       }
 
       #prev-btn, #next-btn {
-        display: block !important;
+        display: none !important;
       }
     }
   </style>
@@ -443,8 +410,6 @@ function loadPage(i) {
 		    	
 		              loadPage(i);
          }
-
-	
       }
 
 	}     
@@ -496,17 +461,14 @@ function loadPage(i) {
     $("#last-page-btn").on("click", function () {
       $flipbook.turn("page", totalPages);
     });
+
     $flipbook.show();
     $loader.hide();
-	
-
-
-$flipbook.css("visibility", "visible").show()
-$("#main-layout").css("visibility", "visible").show();
-
-
     $scrollbarContainer.css("visibility", "visible").show();
-  
+    $prev.show();
+    $next.show();
+    $("#first-page-btn").show();
+    $("#last-page-btn").show();
   });
 </script>
 
