@@ -395,7 +395,7 @@ function loadPage(i) {
           for (let i = page-5; i <= page + 5; i++) {
 		
             if (i <= totalPages) {
-		alert("Turn useful"+i);
+		//alert("Turn useful"+i);
 
               loadPage(i);
             }
@@ -409,8 +409,9 @@ function loadPage(i) {
             }
           }
 
-	}        },
-             }
+	}        
+	},
+        }
     });
 
     for (let i = 1; i <= initialPages; i++) {
