@@ -394,7 +394,7 @@ function loadPage(i) {
 	{
           for (let i = page-5; i <= page + 5; i++) {
 		
-            if (i >= 12 && i <= totalPages) {
+            if (i <= totalPages) {
 		alert("Turn useful"+i);
 
               loadPage(i);
@@ -404,7 +404,7 @@ function loadPage(i) {
 	else
 	{
 	   for (let i = page; i <= page + 1; i++) {
-            if (i >= 1 && i <= totalPages) {s
+            if (i >= 1 && i <= totalPages) {
 		              loadPage(i);
             }
           }
