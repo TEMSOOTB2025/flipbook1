@@ -290,7 +290,7 @@ margin-top: 2%;
 function loadPage(i) {
 
   if (!loadedPages.has(i)) {
-	//alert("Actual load Page" +i);
+	alert("Actual load Page" +i);
     let $page;
 
     if (i === 23) {
@@ -395,7 +395,7 @@ function loadPage(i) {
           for (let i = page-5; i <= page + 5; i++) {
 		
             if (i >= 12 && i <= totalPages) {
-		//alert("Turn useful"+i);
+		alert("Turn useful"+i);
 
               loadPage(i);
             }
@@ -404,7 +404,7 @@ function loadPage(i) {
 	else
 	{
 	   for (let i = page; i <= page + 1; i++) {
-            if (i >= 1 && i <= totalPages) {
+            if (i >= 1 && i <= totalPages) {s
 		              loadPage(i);
             }
           }
