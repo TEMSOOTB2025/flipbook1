@@ -288,10 +288,12 @@ margin-top: 2%;
     const loadedPages = new Set();
 
 function loadPage(i) {
+
   if (!loadedPages.has(i)) {
     let $page;
 
     if (i === 23) {
+	    alert(i);
 	
       $page = $(`
         <div class="page" style="position: relative;">
