@@ -290,8 +290,8 @@ margin-top: 2%;
 function loadPage(i) {
 
   if (!loadedPages.has(i)) {
-	
-    let $page;
+	//alert("actual load"+i);
+	    let $page;
 
     if (i === 23) {
 	
@@ -403,20 +403,21 @@ function loadPage(i) {
 	}
 	else
 	{
-	   for (let i = page; i <= page + 1; i++) {
-            if (i >= 1 && i <= totalPages) {
-		    	alert("Why I am loading this page ="+ page +  "i=" +i);
+			 for (let i = page; i <= page + 1; i++) {
+   if (i >= 1 && i <= totalPages) 
+		{
+		    	
 		              loadPage(i);
-            }
-          }
+         }
+      }
 
-	}        
+	}     
 	},
         }
     });
 
     for (let i = 1; i <= initialPages; i++) {
-
+	//alert("X");
       loadPage(i);
     }
 
@@ -443,7 +444,9 @@ function loadPage(i) {
     });
 
     $prev.on("click", function () {
-      $flipbook.turn("previous");
+     $flipbook.turn("previous");
+
+
     });
 
     $next.on("click", function () {
