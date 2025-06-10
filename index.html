@@ -388,7 +388,7 @@ function loadPage(i) {
         turning: function (event, page) {
           $("#page-turn-audio")[0].play();
           $scrollbar.val(page);
-          for (let i = page - 1; i <= page + 1; i++) {
+          for (let i = page - 1; i <= page + 4; i++) {
             if (i >= 1 && i <= totalPages) {
               loadPage(i);
             }
