@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>2.Out of the Blue 2025 - Timothy Edwards Middle School</title>
+  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
   <style>
@@ -284,12 +284,13 @@ margin-top: 2%;
     const $loader = $("#loader");
 
     const totalPages = 158;
-    const initialPages = 10;
+    const initialPages = 11;
     const loadedPages = new Set();
 
 function loadPage(i) {
 
   if (!loadedPages.has(i)) {
+	//alert("Actual load Page" +i);
     let $page;
 
     if (i === 23) {
@@ -378,6 +379,7 @@ function loadPage(i) {
       const wrapperHeight = $flipbook.height();
 
     $flipbook.turn({
+
       width: wrapperWidth,
       height: wrapperHeight,
       autoCenter: true,
@@ -388,16 +390,31 @@ function loadPage(i) {
         turning: function (event, page) {
           $("#page-turn-audio")[0].play();
           $scrollbar.val(page);
-          for (let i = page - 1; i <= page + 4; i++) {
-            if (i >= 1 && i <= totalPages) {
+	 if(page>11)
+	{
+          for (let i = page-5; i <= page + 5; i++) {
+		
+            if (i >= 12 && i <= totalPages) {
+		//alert("Turn useful"+i);
+
               loadPage(i);
             }
           }
-        },
+	}
+	else
+	{
+	   for (let i = page; i <= page + 1; i++) {
+            if (i >= 1 && i <= totalPages) {
+		              loadPage(i);
+            }
+          }
+
+	}        },
              }
     });
 
     for (let i = 1; i <= initialPages; i++) {
+
       loadPage(i);
     }
 
