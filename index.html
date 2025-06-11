@@ -48,8 +48,6 @@ height: 100%; /* or any fixed height */
   overflow-y: auto;
 
 
-  height: 100vh;
-
 }
 
 
@@ -61,8 +59,8 @@ height: 100%; /* or any fixed height */
 
 
 .page img {
-  width: 100%;
-  height: auto;
+  width: 80%;
+  height: 100%;
   aspect-ratio: 16 / 10; /* Adjust based on page image shape */
 
  /* Gray border for structure */
@@ -84,12 +82,14 @@ height: 100%; /* or any fixed height */
       display: flex;
       flex-direction: column;
       align-items: center;
+	width: 100%;
+      height:100%;
 
     }
 
      #flipbook-wrapper {
-      width: 78%;
-      height:97.5%;
+      width: 80%;
+      height:100%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
@@ -97,9 +97,12 @@ height: 100%; /* or any fixed height */
       //align-items: flex-start;
 margin-top: 2%;
 overflow-auto;
-    
+
+
+	
     }
 
+       
     #flipbook {
       width: 80%;
       height: 100%;
@@ -111,6 +114,15 @@ overflow-auto;
  
     }
     
+    
+
+@media (max-width: 768px) {
+  #flipbook {
+    width: 80vw;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
 
 .page {
   position: relative;
@@ -129,7 +141,7 @@ overflow-auto;
 
  .tooltip-wrapper {
       position: absolute;
-      display: inline-block;
+      display: block;
     }
 
     .custom-tooltip {
@@ -163,8 +175,8 @@ overflow-auto;
       cursor: pointer;
       padding: 5px;
     
-      height: 70px;
-      width: 70px;
+      height: 50px;
+      width: 50px;
       position: absolute;
 
   	opacity: 0;
@@ -231,7 +243,7 @@ overflow-auto;
 }
 
 
-    @media (max-width: 900px) {
+    @media (max-width: 1200px) {
       #main-layout {
         flex-direction: column;
         align-items: center;
@@ -240,7 +252,7 @@ overflow-auto;
 
 
       #flipbook-wrapper {
-        width: 100%;
+        width: 100vw;
       }
 
       #page-scrollbar-container {
@@ -259,10 +271,7 @@ overflow-auto;
     </div>
 
 
-<div id="loader">
-  <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="60">
-  <p>Loading flipbook, please wait...</p>
-</div>
+
 
 <div id="main-layout">
   <div id="flipbook-display-area">
@@ -271,7 +280,7 @@ overflow-auto;
       <!-- Navigation Buttons -->
 
 
-      <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
+      <div class="tooltip-wrapper" style="bottom: 22%; left: 2%;">
 
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
@@ -279,7 +288,7 @@ overflow-auto;
         <div class="custom-tooltip">Previous Page</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+      <div class="tooltip-wrapper" style="bottom: 12%; left: 2%;">
         <button id="first-page-btn" class="nav-button">
           <img src="first.png" alt="First Page">
         </button>
@@ -290,21 +299,21 @@ overflow-auto;
       <div id="flipbook"></div>
 
 
-  <div class="tooltip-wrapper" style="bottom: 40%; right: 7.25%;">
+  <div class="tooltip-wrapper" style="bottom: 35%; right: 7%;">
 
 <button class="nav-button" onclick="toggleFullscreen()"> <img src="fullscreen.png" alt="FullScreen">
 </button>
 <div class="custom-tooltip">Full Screen</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 30%; right: 7.25%;">
+      <div class="tooltip-wrapper" style="bottom: 22%; right: 7%;">
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
         <div class="custom-tooltip">Next Page</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 20%; right: 7.25%;">
+      <div class="tooltip-wrapper" style="bottom: 12%; right: 7%;">
         <button id="last-page-btn" class="nav-button">
           <img src="last.png" alt="Last Page">
         </button>
@@ -312,7 +321,6 @@ overflow-auto;
       </div>
 
       <!-- Page 23 Overlay -->
-     
 
     </div>
 	
