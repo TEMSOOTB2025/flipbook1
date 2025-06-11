@@ -31,40 +31,54 @@
       display: block;
     }
 
+
     #main-layout {
-      align-items: start;
+            align-items: start;
       visibility: hidden;
       box-sizing: border-box;
-      opacity: 0;
-      transition: opacity 0.5s ease-in;
-      background: url('background.png') no-repeat;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+ background: url('background.png') no-repeat;
       background-size: cover;
-      height: 100%; /* or any fixed height */
-      overflow: auto; /* or scroll */
+
+
+height: 100%; /* or any fixed height */
+  overflow: auto; /* or scroll */
+
     }
+#main-layout:fullscreen {
+  overflow-y: auto;
 
-   #main-layout:fullscreen {
-  	overflow-y: auto;
-	height: 100vh;
-	}
 
-   #main-layout:fullscreen {
-	overflow-y: auto;
-       }
+  height: 100vh;
 
-  .page img {
-  	width: 100%;
-  	height: auto;
-  	aspect-ratio: 16 / 10; /* Adjust based on page image shape */
-	/* Gray border for structure */
-  	border: 2px solid #999;
-	box-shadow: 
-    		0 0 20px rgba(255, 0, 255, 0.8),   /* Bright magenta outer glow */
-    		0 0 40px rgba(138, 43, 226, 0.6),  /* Blue-violet outer glow */
-    		inset 0 0 20px rgba(186, 85, 211, 0.5); /* Inner soft violet glow */
+}
 
- 	display: block;
-	}
+
+
+#main-layout:fullscreen {
+  overflow-y: auto;
+}
+
+
+
+.page img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10; /* Adjust based on page image shape */
+
+ /* Gray border for structure */
+  border: 2px solid #999;
+
+  /* Strong ultraviolet glow */
+  box-shadow: 
+    0 0 20px rgba(255, 0, 255, 0.8),   /* Bright magenta outer glow */
+    0 0 40px rgba(138, 43, 226, 0.6),  /* Blue-violet outer glow */
+    inset 0 0 20px rgba(186, 85, 211, 0.5); /* Inner soft violet glow */
+
+  display: block;
+
+}
 
 
     #flipbook-display-area {
@@ -76,15 +90,15 @@
     }
 
      #flipbook-wrapper {
-      width: 80%;
-      height:100%;
+      width: 78%;
+      height:97.5%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
       justify-content: center;
       //align-items: flex-start;
-	margin-top: 2%;
-	overflow-auto;
+margin-top: 2%;
+overflow-auto;
     
     }
 
@@ -173,7 +187,7 @@
     }
 
     #page-scrollbar-container {
-      width: calc(63%);
+      width: calc(65%);
       margin-top: 1.8%;
            visibility: hidden;
     }
