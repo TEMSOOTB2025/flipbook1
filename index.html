@@ -19,49 +19,52 @@
     }
 
     #logo-caption {
-      width: 100%;
-      height: 115px;
+      width: 100vw;
+      height: 9.3vw;
       overflow: hidden;
     }
 
     #logo-caption img {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 9.3vw;
       object-fit: cover; /* Ensures the image scales and crops to fit */
       display: block;
     }
 
-
     #main-layout {
-            align-items: start;
+      align-items: start;
       visibility: hidden;
       box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.5s ease-in;
- background: url('background.png') no-repeat;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+      background: url('background.png') no-repeat;
       background-size: cover;
-
-
+      height: 100%; /* or any fixed height */
+      overflow: auto; /* or scroll */
     }
 
+   #main-layout:fullscreen {
+  	overflow-y: auto;
+	height: 100vh;
+	}
 
-.page img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 10; /* Adjust based on page image shape */
+   #main-layout:fullscreen {
+	overflow-y: auto;
+       }
 
- /* Gray border for structure */
-  border: 2px solid #999;
+  .page img {
+  	width: 100%;
+  	height: auto;
+  	aspect-ratio: 16 / 10; /* Adjust based on page image shape */
+	/* Gray border for structure */
+  	border: 2px solid #999;
+	box-shadow: 
+    		0 0 20px rgba(255, 0, 255, 0.8),   /* Bright magenta outer glow */
+    		0 0 40px rgba(138, 43, 226, 0.6),  /* Blue-violet outer glow */
+    		inset 0 0 20px rgba(186, 85, 211, 0.5); /* Inner soft violet glow */
 
-  /* Strong ultraviolet glow */
-  box-shadow: 
-    0 0 20px rgba(255, 0, 255, 0.8),   /* Bright magenta outer glow */
-    0 0 40px rgba(138, 43, 226, 0.6),  /* Blue-violet outer glow */
-    inset 0 0 20px rgba(186, 85, 211, 0.5); /* Inner soft violet glow */
-
-  display: block;
-
-}
+ 	display: block;
+	}
 
 
     #flipbook-display-area {
@@ -72,20 +75,21 @@
 
     }
 
-    #flipbook-wrapper {
-      width: 75%;
-      height:90.36%;
+     #flipbook-wrapper {
+      width: 80%;
+      height:100%;
       aspect-ratio: 16 / 10;
       position: relative;
       display: flex;
       justify-content: center;
       //align-items: flex-start;
-margin-top: 2%;
+	margin-top: 2%;
+	overflow-auto;
     
     }
 
     #flipbook {
-      width: 83%;
+      width: 80%;
       height: 100%;
            touch-action: manipulation;
       position: relative;
@@ -94,17 +98,23 @@ margin-top: 2%;
 
  
     }
+    
 
-    .page {
-      width: 50%;
-      height: 100%;
-         overflow: hidden;
-     
+.page {
+  position: relative;
+   overflow: hidden;
+  box-shadow: 0 2px 6px rgba(96, 130, 182, 0.15); /* Soft default shadow */
+  box-sizing: border-box;
+  margin: 0px;
+  background: linear-gradient(135deg, #f9f9f9, #eeeeee, #dddddd); /* Very light smoky gradient */
+  aspect-ratio: 16 / 10;
+  border-radius: 3x;
+  z-index: 999;
+  transition: box-shadow 0.3s ease;
+}
 
- 
-aspect-ratio: 16 / 10;
 
-    }
+
  .tooltip-wrapper {
       position: absolute;
       display: inline-block;
@@ -113,19 +123,19 @@ aspect-ratio: 16 / 10;
     .custom-tooltip {
       visibility: hidden;
       background-color: #f3e8ff;
-      color: #333;
+      color: purple;
       text-align: top;
       border-radius: 4px;
       padding: 5px 8px;
       position: absolute;
       z-index: 1002;
-      bottom: 100%;
+      bottom: 50%;
       left: 50%;
       transform: translateX(-50%);
       opacity: 0;
       transition: opacity 0.3s;
       white-space: nowrap;
-      font-size: 12px;
+      font-size: 16px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
@@ -165,12 +175,12 @@ aspect-ratio: 16 / 10;
     #page-scrollbar-container {
       width: calc(63%);
       margin-top: 1.8%;
-      display: none;
-      visibility: hidden;
+           visibility: hidden;
     }
 
     #page-scrollbar {
       width: 100%;
+	
     }
 
     #tooltip {
@@ -187,9 +197,9 @@ aspect-ratio: 16 / 10;
 
     #scrollbar-tooltip {
       position: absolute;
-      background: #333;
+      background: purple;
       color: white;
-      padding: 4px 8px;
+      padding: 4px 4px;
       font-size: 12px;
       border-radius: 4px;
       display: none;
@@ -209,7 +219,7 @@ aspect-ratio: 16 / 10;
 }
 
 
-    @media (max-width: 900px) {
+    @media (max-width: 1200px) {
       #main-layout {
         flex-direction: column;
         align-items: center;
@@ -218,11 +228,11 @@ aspect-ratio: 16 / 10;
 
 
       #flipbook-wrapper {
-        width: 90%;
+        width: 100%;
       }
 
       #page-scrollbar-container {
-        width: 90%;
+        width: 85%;
       }
 
       #prev-btn, #next-btn {
@@ -249,7 +259,7 @@ aspect-ratio: 16 / 10;
       <!-- Navigation Buttons -->
 
 
-      <div class="tooltip-wrapper" style="bottom: 30%; left: 0;">
+      <div class="tooltip-wrapper" style="bottom: 15vw; left: 0;">
 
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
@@ -257,7 +267,7 @@ aspect-ratio: 16 / 10;
         <div class="custom-tooltip">Previous Page</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 20%; left: 0;">
+      <div class="tooltip-wrapper" style="bottom: 10vw; left: 0;">
         <button id="first-page-btn" class="nav-button">
           <img src="first.png" alt="First Page">
         </button>
@@ -268,21 +278,21 @@ aspect-ratio: 16 / 10;
       <div id="flipbook"></div>
 
 
-  <div class="tooltip-wrapper" style="bottom: 40%; right: 7.25%;">
+  <div class="tooltip-wrapper" style="bottom: 20vw; right: 7.25%;">
 
 <button class="nav-button" onclick="toggleFullscreen()"> <img src="fullscreen.png" alt="FullScreen">
 </button>
 <div class="custom-tooltip">Full Screen</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 30%; right: 7.25%;">
+      <div class="tooltip-wrapper" style="bottom: 15vw; right: 7.25%;">
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
         <div class="custom-tooltip">Next Page</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 20%; right: 7.25%;">
+      <div class="tooltip-wrapper" style="bottom: 10vw; right: 7.25%;">
         <button id="last-page-btn" class="nav-button">
           <img src="last.png" alt="Last Page">
         </button>
