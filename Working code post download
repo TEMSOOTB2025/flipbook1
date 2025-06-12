@@ -1,557 +1,162 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-	
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Out of the Blue 2025 - Timothy Edwards Middle School</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      background: url('background.png') no-repeat;
-      background-size: cover;
-    }
-
-    #logo-caption {
-      width: 100%;
-           overflow: hidden;
-    }
-
-    #logo-caption img {
-      width: 100%;
-            object-fit: cover; /* Ensures the image scales and crops to fit */
-      display: block;
-    }
-
-
-    #main-layout {
-            align-items: start;
-      visibility: hidden;
-      box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.5s ease-in;
- background: url('background.png') no-repeat;
-      background-size: cover;
-
-width: 100vw; /* or any fixed height */
-
-	      height:auto;
-aspect-ratio:89/128;
-
-    }
-
-	  #main-layout:fullscreen {
-
-width:100%;
-	      height:auto;
-aspect-ratio:89/128;
-
-}
-
-
-
-
-
-.page img {
-  width: 80%;
-height:auto;
-   aspect-ratio: 89 / 124; /* Adjust based on page image shape */
-
- /* Gray border for structure */
-  border: 2px solid #999;
-
-  /* Strong ultraviolet glow */
-  box-shadow: 
-    0 0 20px rgba(255, 0, 255, 0.8),   /* Bright magenta outer glow */
-    0 0 40px rgba(138, 43, 226, 0.6),  /* Blue-violet outer glow */
-    inset 0 0 20px rgba(186, 85, 211, 0.5); /* Inner soft violet glow */
-
-  display: block;
-
-}
-
-
-    #flipbook-display-area {
-	margin-top: 0%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-	width: 80%;
-      height:auto;
-aspect-ratio:89/128;
-
-    }
-
-     #flipbook-wrapper {
-     
-            position: relative;
-      display: flex;
-      justify-content: center;
-      //align-items: flex-start;
-margin-top: 2%;
-
-	width: 100%;
-      height:auto;
-aspect-ratio:89/128;
-
-
-	
-    }
-
-       
-    #flipbook {
-      	width: 80%;
-      height:auto;
-aspect-ratio:89/128;
-           touch-action: manipulation;
-      position: relative;
-      justify-content: center;
-	
- 
-    }
-    
-    
-
-@media (max-width: 768px) {
-  #flipbook {
-    width: 80%;
-    height: auto;
-    	    aspect-ratio:89/128;
-  }
-}
-
-.page {
-  position: relative;
-   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(96, 130, 182, 0.15); /* Soft default shadow */
-  box-sizing: border-box;
-  margin: 0px;
-  background: linear-gradient(135deg, #f9f9f9, #eeeeee, #dddddd); /* Very light smoky gradient */
-  aspect-ratio: 89 / 124;
-  border-radius: 3x;
-  z-index: 999;
-  transition: box-shadow 0.3s ease;
-
-}
-
- .tooltip-wrapper {
-      position: absolute;
-      display: block;
-    }
-
-    .custom-tooltip {
-      visibility: hidden;
-      background-color: #f3e8ff;
-      color: purple;
-      text-align: top;
-      border-radius: 4px;
-      padding: 5px 8px;
-      position: absolute;
-      z-index: 1002;
-      bottom: 50%;
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0;
-      transition: opacity 0.3s;
-      white-space: nowrap;
-      font-size: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-
-    .tooltip-wrapper:hover .custom-tooltip {
-      visibility: visible;
-      opacity: 1;
-    }
-
-
-    .nav-button {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 5px;
-    
-      height: 50px;
-      width: 50px;
-      position: absolute;
-
-  	opacity: 0;
-
-
-    }
-
-
-
-    .nav-button img {
-      height: 100%;
-      width: auto;
-      opacity: 0.8;
-    }
-
-    .nav-button img:hover {
-      opacity: 1;
-    }
-
-    #page-scrollbar-container {
-      width: calc(64%);
-      margin-top: 1.8%;
-           visibility: hidden;
-    }
-
-    #page-scrollbar {
-      width: 100%;
-	
-    }
-
-    #tooltip {
-      position: absolute;
-      background: #333;
-      color: white;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      display: none;
-      pointer-events: none;
-      z-index: 1001;
-    }
-
-    #scrollbar-tooltip {
-      position: absolute;
-      background: purple;
-      color: white;
-      padding: 4px 4px;
-      font-size: 12px;
-      border-radius: 4px;
-      display: none;
-      pointer-events: none;
-     
-    }
-
-
-
-#loader {
-  position: absolute;
-  
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-   margin-top: 100px;
-
-}
-
-
-    @media (max-width: 1200px) {
-      #main-layout {
-        flex-direction: column;
-        align-items: center;
-      }
-
-
-
-      #flipbook-wrapper {
-        width: 100vw;
-      }
-
-      #page-scrollbar-container {
-        width: 85%;
-      }
-
-      #prev-btn, #next-btn {
-        display: block !important;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div id="logo-caption">
-       <a href="https://tems.southwindsorschools.org/" target="_blank"><img src="TEMSLogo1.png" alt="Timothy Edwards Middle School"></a>
-    </div>
-
-
-
-
-<div id="main-layout">
-  <div id="flipbook-display-area">
-    <div id="flipbook-wrapper"> <!-- Ensure relative positioning -->
-      
-      <!-- Navigation Buttons -->
-
-
-      <div class="tooltip-wrapper" style="bottom: 22%; left: 2%;">
-
-        <button id="prev-btn" class="nav-button">
-          <img src="previous-arrow.png" alt="Previous">
-        </button>
-        <div class="custom-tooltip">Previous Page</div>
-      </div>
-
-      <div class="tooltip-wrapper" style="bottom: 12%; left: 2%;">
-        <button id="first-page-btn" class="nav-button">
-          <img src="first.png" alt="First Page">
-        </button>
-        <div class="custom-tooltip">First Page</div>
-      </div>
-
-      <!-- Flipbook -->
-      <div id="flipbook"></div>
-
-
-  <div class="tooltip-wrapper" style="bottom: 35%; right: 7%;">
-
-<button class="nav-button" onclick="toggleFullscreen()"> <img src="fullscreen.png" alt="FullScreen">
-</button>
-<div class="custom-tooltip">Full Screen</div>
-      </div>
-
-      <div class="tooltip-wrapper" style="bottom: 22%; right: 7%;">
-        <button id="next-btn" class="nav-button">
-          <img src="next-arrow.png" alt="Next">
-        </button>
-        <div class="custom-tooltip">Next Page</div>
-      </div>
-
-      <div class="tooltip-wrapper" style="bottom: 12%; right: 7%;">
-        <button id="last-page-btn" class="nav-button">
-          <img src="last.png" alt="Last Page">
-        </button>
-        <div class="custom-tooltip">Last Page</div>
-      </div>
-
-      <!-- Page 23 Overlay -->
-
-    </div>
-	
-     <!-- Scrollbar -->
-    <div id="page-scrollbar-container">
-      <input type="range" id="page-scrollbar" min="1" max="1" value="1">
-    </div>
-  </div>
-
-
-<div id="tooltip"></div>
-<div id="scrollbar-tooltip"></div>
-
-  <audio id="page-turn-audio" preload="auto">
-    <source src="turn.mp3" type="audio/mpeg">
-  </audio>
-
 <script>
- $(document).ready(function () {
-    const $flipbook = $("#flipbook");
-    const $scrollbar = $("#page-scrollbar");
-    const $scrollbarContainer = $("#page-scrollbar-container");
-    const $prev = $("#prev-btn");
-    const $next = $("#next-btn");
-    const $loader = $("#loader");
+$(document).ready(function () {
+  const $flipbook = $("#flipbook");
+  const $scrollbar = $("#page-scrollbar");
+  const $scrollbarContainer = $("#page-scrollbar-container");
+  const $prev = $("#prev-btn");
+  const $next = $("#next-btn");
+  const $loader = $("#loader");
 
-    const totalPages = 158;
-    const initialPages = 11;
-    const loadedPages = new Set();
+  const totalPages = 158;
+  const initialPages = 11;
+  const loadedPages = new Set();
 
-function loadPage(i) {
+  function loadPage(i) {
+    if (!loadedPages.has(i)) {
+      let $page;
 
-  if (!loadedPages.has(i)) {
-	//alert("actual load"+i);
-	    let $page;
-
-    if (i === 23) {
-	
-      $page = $(`
-        <div class="page" style="position: relative;">
-          <img src="pages/Page_${i}.png" width="100%" height="100%">
-          <div id="page23-overlay3" style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 20000;
-            pointer-events: none;
-          ">
-            <a href="https://drive.google.com/file/d/1ukrzvGwh8u7RrXyfEXSG-AL19t8D9979/view" target="_blank"
-               style="position: absolute; top: 80%; left: 50%; transform: translateX(-50%);
+      if (i === 23) {
+        $page = $(`
+          <div class="page" style="position: relative;">
+            <img src="pages/Page_${i}.png" width="100%" height="100%">
+            <div id="page23-overlay1" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20000; pointer-events: none;">
+              <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
+                style="position: absolute; top: 29%; left: 50%; transform: translateX(-50%);
                       background-color: white; color: #4682B4; font-size: 10px;
                       padding: 4px 8px; border-radius: 4px; z-index: 20001;
-                      text-decoratio: none; pointer-events: auto;">
-              <u>Link to Music</u>
-            </a>
+                      text-decoration: none; pointer-events: auto;">
+                <u>Link to Music</u>
+              </a>
+            </div>
+            <div id="page23-overlay2" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20000; pointer-events: none;">
+              <a href="https://drive.google.com/file/d/1J-KtVyAbwTF9PvWllHA7YU38h3uHXMoh/view" target="_blank"
+                style="position: absolute; top: 58%; left: 50%; transform: translateX(-50%);
+                      background-color: white; color: #4682B4; font-size: 10px;
+                      padding: 4px 8px; border-radius: 4px; z-index: 20001;
+                      text-decoration: none; pointer-events: auto;">
+                <u>Link to Music</u>
+              </a>
+            </div>
+            <div id="page23-overlay3" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20000; pointer-events: none;">
+              <a href="https://drive.google.com/file/d/1ukrzvGwh8u7RrXyfEXSG-AL19t8D9979/view" target="_blank"
+                style="position: absolute; top: 80%; left: 50%; transform: translateX(-50%);
+                      background-color: white; color: #4682B4; font-size: 10px;
+                      padding: 4px 8px; border-radius: 4px; z-index: 20001;
+                      text-decoration: none; pointer-events: auto;">
+                <u>Link to Music</u>
+              </a>
+            </div>
           </div>
-	 <div id="page23-overlay2" style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 20000;
-        pointer-events: none;
-      ">
-        <a href="https://drive.google.com/file/d/1J-KtVyAbwTF9PvWllHA7YU38h3uHXMoh/view" target="_blank"
-           style="position: absolute; top: 58%; left: 50%; transform: translateX(-50%);
-                  background-color: white; color: #4682B4; font-size: 10px;
-                  padding: 4px 8px; border-radius: 4px; z-index: 20001;
-                  text-decoratio: none; pointer-events: auto;">
-             <u>Link to Music</u>
-        </a>
-      </div>
- <div id="page23-overlay1" style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 20000;
-        pointer-events: none;
-      ">
-        <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
-           style="position: absolute; top: 29%; left: 50%; transform: translateX(-50%);
-                  background-color: white; color: #4682B4; font-size: 10px;
-                  padding: 4px 8px; border-radius: 4px; z-index: 20001;
-                  text-decoratio: none; pointer-events: auto;">
-              <u>Link to Music</u>
-        </a>
-      </div>
-        </div>
-      `);
-    } else {
-    
-      $page = $(`
-        <div class="page">
-          <img src="pages/Page_${i}.png" width="100%" height="100%">
-        </div>
-      `);
-    }
+        `);
+      } else {
+        $page = $(`
+          <div class="page">
+            <img src="pages/Page_${i}.png" width="100%" height="100%">
+          </div>
+        `);
+      }
 
-    $flipbook.turn("addPage", $page, i);
-    loadedPages.add(i);
+      $flipbook.turn("addPage", $page, i);
+      loadedPages.add(i);
+    }
   }
-}
 
+  function getPageLabel(page, totalPages) {
+    if (page === 1) return "Front Cover";
+    if (page === 2 || page === 3) return "Introduction";
+    if (page === totalPages) return "Back Cover";
+    const left = page % 2 === 0 ? page : page - 1;
+    const right = left + 1;
+    return `Page ${left}-${right}`;
+  }
 
-    function getPageLabel(page, totalPages) {
-      if (page === 1) return "Front Cover";
-      if (page === 2 || page === 3) return "Introduction";
-      if (page === totalPages) return "Back Cover";
-      const left = page % 2 === 0 ? page : page - 1;
-      const right = left + 1;
-      return `Page ${left}-${right}`;
-    }
+  const wrapperWidth = $flipbook.parent().width();
+  const wrapperHeight = wrapperWidth / (89 / 128); // maintain aspect ratio
 
-     const wrapperWidth = $flipbook.width();
-      const wrapperHeight = $flipbook.height();
+  $flipbook.turn({
+    width: wrapperWidth,
+    height: wrapperHeight,
+    autoCenter: true,
+    elevation: 50,
+    gradients: true,
+    pages: totalPages,
+    when: {
+      turning: function (event, page) {
+        $("#page-turn-audio")[0].play();
+        $scrollbar.val(page);
 
-    $flipbook.turn({
-
-      width: wrapperWidth,
-      height: wrapperHeight,
-      autoCenter: true,
-      elevation: 50,
-      gradients: true,
-      pages: totalPages,
-      when: {
-        turning: function (event, page) {
-          $("#page-turn-audio")[0].play();
-          $scrollbar.val(page);
-	 if(page>11)
-	{
-          for (let i = page-5; i <= page + 5; i++) {
-		
-            if (i <= totalPages) {
-		//alert("Turn useful"+i);
-
+        if (page > 11) {
+          for (let i = page - 5; i <= page + 5; i++) {
+            if (i >= 1 && i <= totalPages) {
               loadPage(i);
             }
           }
-	}
-	else
-	{
-			 for (let i = page; i <= page + 1; i++) {
-   if (i >= 1 && i <= totalPages) 
-		{
-		    	
-		              loadPage(i);
-         }
-
-	
-      }
-
-	}     
-	},
+        } else {
+          for (let i = page; i <= page + 1; i++) {
+            if (i >= 1 && i <= totalPages) {
+              loadPage(i);
+            }
+          }
         }
-    });
-
-    for (let i = 1; i <= initialPages; i++) {
-	//alert("X");
-      loadPage(i);
+      }
     }
-
-    $scrollbar.attr("max", totalPages);
-    $scrollbar.on("input", function () {
-      const page = parseInt($(this).val());
-      const label = getPageLabel(page, totalPages);
-      const tooltip = $("#scrollbar-tooltip");
-
-      const offset = $(this).offset();
-      const width = $(this).width();
-      const percent = (page - 1) / (totalPages - 1);
-      const left = offset.left + percent * width;
-
-      tooltip.text(label)
-             .css({ top: offset.top - 30, left: left - 20 })
-             .show();
-
-      $flipbook.turn("page", page);
-    });
-
-    $scrollbar.on("mouseleave", function () {
-      $("#scrollbar-tooltip").hide();
-    });
-
-    $prev.on("click", function () {
-     $flipbook.turn("previous");
-
-
-    });
-
-    $next.on("click", function () {
-      $flipbook.turn("next");
-    });
-
-    $("#first-page-btn").on("click", function () {
-      $flipbook.turn("page", 1);
-    });
-
-    $("#last-page-btn").on("click", function () {
-      $flipbook.turn("page", totalPages);
-    });
-    $flipbook.show();
-    $loader.hide();
-	
-
-
-$flipbook.css("visibility", "visible").show()
-$("#main-layout").css("visibility", "visible").show();
-
-
-    $scrollbarContainer.css("visibility", "visible").show();
-  
   });
 
+  for (let i = 1; i <= initialPages; i++) {
+    loadPage(i);
+  }
+
+  $scrollbar.attr("max", totalPages);
+  $scrollbar.on("input", function () {
+    const page = parseInt($(this).val());
+    const label = getPageLabel(page, totalPages);
+    const tooltip = $("#scrollbar-tooltip");
+
+    const offset = $(this).offset();
+    const width = $(this).width();
+    const percent = (page - 1) / (totalPages - 1);
+    const left = offset.left + percent * width;
+
+    tooltip.text(label)
+           .css({ top: offset.top - 30, left: left - 20 })
+           .show();
+
+    $flipbook.turn("page", page);
+  });
+
+  $scrollbar.on("mouseleave", function () {
+    $("#scrollbar-tooltip").hide();
+  });
+
+  $prev.on("click", function () {
+    $flipbook.turn("previous");
+  });
+
+  $next.on("click", function () {
+    $flipbook.turn("next");
+  });
+
+  $("#first-page-btn").on("click", function () {
+    $flipbook.turn("page", 1);
+  });
+
+  $("#last-page-btn").on("click", function () {
+    $flipbook.turn("page", totalPages);
+  });
+
+  $flipbook.css("visibility", "visible").show();
+  $("#main-layout").css("visibility", "visible").show();
+  $scrollbarContainer.css("visibility", "visible").show();
+});
+
 function toggleFullscreen() {
-  const flipbook = document.getElementById("main-layout");
-  if (!document.fullscreenElement) {
-    flipbook.requestFullscreen().catch(err => {
-      alert(`Error attempting to enable full-screen mode: ${err.message}`);
-    });
-  } else {
-    document.exitFullscreen();
-  }
+  const flipbook = document.getElementById("main-layout");
+  if (!document.fullscreenElement) {
+    flipbook.requestFullscreen().catch(err => {
+      alert(`Error attempting to enable full-screen mode: ${err.message}`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
 }
-
 </script>
-
-</body>
-</html>
