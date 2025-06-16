@@ -16,6 +16,9 @@
       overflow-x: hidden;
       background: url('background.png') no-repeat;
       background-size: cover;
+	display:flex;
+flex-direction: column;
+
     }
 
     #logo-caption {
@@ -34,6 +37,7 @@
             align-items: start;
       visibility: hidden;
       box-sizing: border-box;
+
   opacity: 0;
   transition: opacity 0.5s ease-in;
  background: url('background.png') no-repeat;
@@ -53,21 +57,12 @@ height: 100%; /* or any fixed height */
 
 
 .page img {
- // width: 80%;
- // height: auto;
-
-  aspect-ratio: 89/128; /* Adjust based on page image shape */
+   aspect-ratio: 128/89; /* Adjust based on page image shape */
 
  /* Gray border for structure */
-  border: 2px solid #999;
+  border: 0px solid #999;
 
-  /* Strong ultraviolet glow */
-  box-shadow: 
-    0 0 20px rgba(255, 0, 255, 0.8),   /* Bright magenta outer glow */
-    0 0 40px rgba(138, 43, 226, 0.6),  /* Blue-violet outer glow */
-    inset 0 0 20px rgba(186, 85, 211, 0.5); /* Inner soft violet glow */
-
-  display: block;
+    display: block;
 
 }
 
@@ -77,47 +72,48 @@ height: 100%; /* or any fixed height */
       display: flex;
       flex-direction: column;
       align-items: center;
-	width: 100%;
-      height:100%;
+
+overflow-auto;
 
     }
 
      #flipbook-wrapper {
-      width: 80%;
-      height:auto;
-      aspect-ratio: 16/10;
+      width: 100%;
+      height:100%;
+      aspect-ratio: 128/89;
       position: relative;
-      display: flex;
-      justify-content: center;
-      //align-items: flex-start;
-margin-top: 2%;
+            flex-direction: column;
+      align-items: center;
+margin-top: 1.5%;
 overflow-auto;
+  display: flex;
+
 
     }
 
        
     #flipbook {
-      width: 80%;
-       height:auto;
- aspect-ratio: 16/10;
+      width: auto;
+       height:100%;
+
 
            touch-action: manipulation;
       position: relative;
       justify-content: center;
-	aspect-ratio: 16/10;
+	aspect-ratio: 128/89;
 
- 
+
     }
     
     
 
 @media (max-width: 768px) {
   #flipbook {
-    width: 80%;
-       height:auto;
+    width: auto;
+       height:100%;
 
 
-    aspect-ratio: 10/16;
+    aspect-ratio: 128/89;
   }
 }
 
@@ -128,12 +124,13 @@ overflow-auto;
   box-sizing: border-box;
   margin: 0px;
   background: linear-gradient(135deg, #f9f9f9, #eeeeee, #dddddd); /* Very light smoky gradient */
-  aspect-ratio: 16/10;
-  border-radius: 3x;
+   border-radius: 6px;
   z-index: 999;
   transition: box-shadow 0.3s ease;
 
 }
+
+
 
 
 
@@ -195,8 +192,8 @@ overflow-auto;
     }
 
     #page-scrollbar-container {
-      width: calc(64%);
-      margin-top: 1.8%;
+      width: calc(70%);
+      margin-bottom: 10%;
            visibility: hidden;
     }
 
@@ -236,7 +233,7 @@ overflow-auto;
   
   transform: translate(-50%, -50%);
   z-index: 9999;
-   margin-top: 100px;
+  
 
 }
 
@@ -245,12 +242,13 @@ overflow-auto;
       #main-layout {
         flex-direction: column;
         align-items: center;
+display:flex;
       }
 
 
 
       #page-scrollbar-container {
-        width: 85%;
+        width: 100%;
       }
 
       #prev-btn, #next-btn {
@@ -274,7 +272,7 @@ overflow-auto;
       <!-- Navigation Buttons -->
 
 
-      <div class="tooltip-wrapper" style="bottom: 22%; left: 2%;">
+      <div class="tooltip-wrapper" style="bottom: 45%; left: 10%;">
 
         <button id="prev-btn" class="nav-button">
           <img src="previous-arrow.png" alt="Previous">
@@ -282,7 +280,7 @@ overflow-auto;
         <div class="custom-tooltip">Previous Page</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 12%; left: 2%;">
+      <div class="tooltip-wrapper" style="bottom: 35%; left: 10%;">
         <button id="first-page-btn" class="nav-button">
           <img src="first.png" alt="First Page">
         </button>
@@ -293,21 +291,23 @@ overflow-auto;
       <div id="flipbook"></div>
 
 
-  <div class="tooltip-wrapper" style="bottom: 35%; right: 7%;">
+
+
+  <div class="tooltip-wrapper" style="bottom: 55%; right: 14%;">
 
 <button class="nav-button" onclick="toggleFullscreen()"> <img src="fullscreen.png" alt="FullScreen">
 </button>
 <div class="custom-tooltip">Full Screen</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 22%; right: 7%;">
+      <div class="tooltip-wrapper" style="bottom:45%; right: 14%;">
         <button id="next-btn" class="nav-button">
           <img src="next-arrow.png" alt="Next">
         </button>
         <div class="custom-tooltip">Next Page</div>
       </div>
 
-      <div class="tooltip-wrapper" style="bottom: 12%; right: 7%;">
+      <div class="tooltip-wrapper" style="bottom: 35%; right: 14%;">
         <button id="last-page-btn" class="nav-button">
           <img src="last.png" alt="Last Page">
         </button>
@@ -315,15 +315,17 @@ overflow-auto;
       </div>
 
       <!-- Page 23 Overlay -->
-
+   <div id="page-scrollbar-container" style="margin-top:0;margin-bottom:15%;">
+    <input type="range" id="page-scrollbar" min="1" max="1" value="1">
+  </div>
     </div>
 	
      <!-- Scrollbar -->
-    <div id="page-scrollbar-container">
-      <input type="range" id="page-scrollbar" min="1" max="1" value="1">
-    </div>
-  </div>
 
+
+  
+  </div>
+</div>
 
 <div id="tooltip"></div>
 <div id="scrollbar-tooltip"></div>
@@ -355,7 +357,10 @@ function loadPage(i) {
 	
       $page = $(`
         <div class="page" style="position: relative;">
-          <img src="pages/Page_${i}.png" width="100%" height="100%">
+         
+	  <img src="pages/Page_${i}.png" style="width: 100%; height: 100%; aspect-ratio:89/128;">
+
+
           <div id="page23-overlay3" style="
             position: absolute;
             top: 0;
@@ -367,7 +372,7 @@ function loadPage(i) {
           ">
             <a href="https://drive.google.com/file/d/1ukrzvGwh8u7RrXyfEXSG-AL19t8D9979/view" target="_blank"
                style="position: absolute; top: 80%; left: 50%; transform: translateX(-50%);
-                      background-color: white; color: #4682B4; font-size: 10px;
+                      background-color: white; color: #4682B4; font-size: 13px;
                       padding: 4px 8px; border-radius: 4px; z-index: 20001;
                       text-decoration: none; pointer-events: auto;">
               <u>Link to Music</u>
@@ -384,7 +389,7 @@ function loadPage(i) {
       ">
         <a href="https://drive.google.com/file/d/1J-KtVyAbwTF9PvWllHA7YU38h3uHXMoh/view" target="_blank"
            style="position: absolute; top: 58%; left: 50%; transform: translateX(-50%);
-                  background-color: white; color: #4682B4; font-size: 10px;
+                  background-color: white; color: #4682B4; font-size: 13px;
                   padding: 4px 8px; border-radius: 4px; z-index: 20001;
                   text-decoration: none; pointer-events: auto;">
              <u>Link to Music</u>
@@ -401,7 +406,7 @@ function loadPage(i) {
       ">
         <a href="https://drive.google.com/file/d/1VzIjx-NlTOM8Q88kZivzCrHhYHxrjAyd/view" target="_blank"
            style="position: absolute; top: 29%; left: 50%; transform: translateX(-50%);
-                  background-color: white; color: #4682B4; font-size: 10px;
+                  background-color: white; color: #4682B4; font-size: 13px;
                   padding: 4px 8px; border-radius: 4px; z-index: 20001;
                   text-decoration: none; pointer-events: auto;">
               <u>Link to Music</u>
@@ -413,7 +418,9 @@ function loadPage(i) {
     
       $page = $(`
         <div class="page">
-          <img src="pages/Page_${i}.png" width="100%" height="100%" object-fit="contain">
+         <img src="pages/Page_${i}.png" style="width: 100%; height: 100%; aspect-ratio:89/128;">
+
+
         </div>
       `);
     }
