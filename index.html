@@ -16,25 +16,23 @@
       overflow-x: hidden;
       background: url('background.png') no-repeat;
       background-size: cover;
-
-
     }
 
     #logo-caption {
-      width: 100%;
-           overflow: hidden;
-    }
+      		width: 100%;
+           	overflow: hidden;
+    		}
 
     #logo-caption img {
-      width: 100%;
+      	width: 100%;
             object-fit: cover; /* Ensures the image scales and crops to fit */
       display: block;
     }
 
 
     #main-layout {
-            align-items: start;
-      visibility: hidden;
+            align-items:center;
+visibility: hidden;
       box-sizing: border-box;
 
   opacity: 0;
@@ -91,32 +89,25 @@ height: 100%; /* or any fixed height */
 
 
 
-    #flipbook-display-area {
-	margin-top: 1%;
+   #flipbook-display-area {
+	
       display: flex;
       flex-direction: column;
       align-items: center;
+justify-content: flex-end;
 border:0px solid pink;
-overflow-auto;
+overflow:auto;
+ background: url('background.png') no-repeat;
+      background-size: cover;
+     width: 100%;
+       height:auto;
 
     }
 
 
-#flipbook-wrapper {
-  display: flex;
-  align-items: center;
-  width: auto;
-  height: 90%;
-    box-sizing: border-box;
-}
 
-
-
-
-
-       
-    #flipbook {
-      width: 90%;
+ #flipbook {
+      width: 100%;
        height:auto;
 
 touch-action: manipulation;
@@ -126,7 +117,7 @@ touch-action: manipulation;
 border:0px solid green;
 overflow:hidden;
 aspect-ratio:128/89;
-
+margin-top: 2%;
     }
     
     
@@ -194,18 +185,14 @@ display: flex;
       background: transparent;
       border: none;
       cursor: pointer;
-      padding: 5px;
+      padding: 6px;
     
-       height: 55px;
-      width: 55px;
       position: relative;
 
   	opacity: 0;
 
 
     }
-
-
 
     .nav-button img {
       height: 55px;
@@ -220,13 +207,13 @@ display: flex;
 
 
 #flipbook-wrapper {
-margin-top:1%;
+
   display: flex;
   align-items: flex-end;
 
-  width: 100%;
-  height: 100%
-  aspect-ratio: 128 / 89;
+  width:96%;
+  height:auto;
+ 
    box-sizing: border-box;
    border:0px solid red;
    position: relative;
@@ -267,18 +254,19 @@ border:0px solid blue;
 }
 
 .flipbook-center {
-  flex: 1;
+ flex: 1;
 
 display: flex;
 justify-content: center;   /* Horizontal center */
-align-items: flex-end;     /* Vertical bottom */
+align-items: flex-start;     /* Vertical bottom */
 
-width:auto;
-height:100%
+width:100%;
+height:auto;
   aspect-ratio: 128/ 89;
 overflow:hidden;
 
 border:0px solid blue;
+
 
 }
 
@@ -286,18 +274,12 @@ border:0px solid blue;
 
 
     #page-scrollbar-container {
-        width: 74%;
-	align-items:center;
-border:0px solid red;display: flex;
+        width: 79%;
+	align-items:flex-start;
+border:0px solid red;
+display: flex;
 
       }
-
-
-
-
-
-    
-
     #page-scrollbar {
       width: 100%;
   justify-content: center;   /* Horizontally center child */
@@ -346,8 +328,8 @@ border:0px solid red;display: flex;
       #prev-btn, #next-btn {
         display: block !important;
       }
-    }
-  </style>
+
+     </style>
 </head>
 <body>
   <div id="logo-caption">
@@ -407,7 +389,6 @@ border:0px solid red;display: flex;
   <audio id="page-turn-audio" preload="auto">
     <source src="turn.mp3" type="audio/mpeg" />
   </audio>
-
 <script>
  $(document).ready(function () {
     const $flipbook = $("#flipbook");
@@ -515,7 +496,7 @@ function loadPage(i) {
       if (page === totalPages) return "Back Cover";
       const left = page % 2 === 0 ? page : page - 1;
       const right = left + 1;
-      return `Page ${left}-${right}`;
+      return `Page ${left-3}-${right-3}`;
     }
 
      const wrapperWidth = $flipbook.width();
@@ -630,6 +611,5 @@ function toggleFullscreen() {
 }
 
 </script>
-
 </body>
 </html>
